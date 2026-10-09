@@ -1,4 +1,4 @@
-# Sharing project memory across Claude Code, Claude.ai and GitHub: what exists (October 2026)
+# Sharing project memory across AI tools: what exists (October 2026)
 
 Research done while designing hamyad. Every claim links to its source; re-check them, these products change monthly.
 
@@ -50,3 +50,32 @@ Hosting: Cloudflare Workers serve Streamable HTTP MCP endpoints; free plan = 100
 4. **No session hand-off.** Nothing summarises a Claude Code session for the chat side, or tells Claude Code "here is what changed in chat since last time".
 
 What hamyad still cannot do: read or write claude.ai's built-in project memory or custom instructions (no API). It works *beside* them; the custom instructions you paste make Claude use the shared brain.
+
+## 4. Beyond Claude: every tool's hooks, logs and connector story (added for 0.2)
+
+hamyad 0.2 verified the hook payloads and transcript formats below by running the real CLIs against a mock model server (`scripts/e2e/`).
+
+| Tool | Hooks (docs) | Context injection | Local transcript | MCP config |
+|---|---|---|---|---|
+| Claude Code 2.1 | [hooks](https://code.claude.com/docs/en/hooks): SessionStart, UserPromptSubmit, Stop, SessionEnd | `hookSpecificOutput.additionalContext` | `~/.claude/projects/<slug>/<session>.jsonl` | `.mcp.json` |
+| Codex CLI 0.162 | [hooks](https://developers.openai.com/codex/hooks): `.codex/hooks.json`, same nested shape as Claude; project hooks must be trusted (`/hooks`) | `additionalContext` | `$CODEX_HOME/sessions/YYYY/MM/DD/rollout-*.jsonl` | `.codex/config.toml` `[mcp_servers.x]` (trusted project), tools appear to the model as one `mcp__x` namespace |
+| Gemini CLI 0.63 | [hooks](https://geminicli.com/docs/hooks/reference/): SessionStart, BeforeAgent, AfterAgent, SessionEnd (not awaited) in `.gemini/settings.json` | `hookSpecificOutput.additionalContext` (wrapped in `<hook_context>` in the user turn) | `~/.gemini/tmp/<project>/chats/session-*.jsonl` | `.gemini/settings.json` `mcpServers`; trusted folders only |
+| Copilot CLI 1.0 | [hooks](https://docs.github.com/en/copilot/reference/hooks-configuration): `.github/hooks/*.json` (`sessionStart`, `userPromptSubmitted`, `agentStop`, `sessionEnd`); also runs `.claude/settings.json` hooks (env `COPILOT_CLI=1`) | `additionalContext` (verified to reach the model in 1.0.94) | `$COPILOT_HOME/session-state/<id>/events.jsonl` | `.mcp.json`, `~/.copilot/mcp-config.json`; VS Code: `.vscode/mcp.json` |
+| Cursor | [hooks](https://cursor.com/docs/hooks): `.cursor/hooks.json` (`sessionStart`, `beforeSubmitPrompt`, `afterAgentResponse`, `stop`, `sessionEnd`); also [third-party (Claude) hooks](https://cursor.com/docs/agent/third-party-hooks) | `additional_context` | agent transcripts under `~/.cursor/projects/<slug>/agent-transcripts/` | `.cursor/mcp.json` (`cursor-agent mcp list` reads it) |
+| Windsurf / Devin Desktop | [Cascade hooks](https://docs.devin.ai/desktop/cascade/hooks): `pre_user_prompt`, `post_cascade_response_with_transcript` | none (rules + AGENTS.md instead) | `~/.windsurf/transcripts/<trajectory>.jsonl` | global only: `~/.codeium/windsurf/mcp_config.json` |
+| aider | none | `read:` files in `.aider.conf.yml` | `.aider.chat.history.md` | none |
+| Zed | none | AGENTS.md rules | — | [`context_servers`](https://zed.dev/docs/ai/mcp) in settings |
+| JetBrains | none | AGENTS.md (Junie) | — | [Junie `.junie/mcp/mcp.json`](https://junie.jetbrains.com/docs/junie-cli-mcp-configuration.html), [AI Assistant MCP settings](https://www.jetbrains.com/help/ai-assistant/mcp.html) |
+
+### Chat apps that accept a remote MCP server (so they can write back)
+
+- **ChatGPT**: developer mode + "Add custom MCP server" ([connect and test](https://developers.openai.com/plugins/deploy/connect-chatgpt), [developer mode](https://help.openai.com/en/articles/12584461)); deep research / company knowledge expect read-only `search` + `fetch` tools ([MCP guide](https://developers.openai.com/api/docs/mcp.md)). Custom GPT **Actions** take an OpenAPI schema with API-key (Bearer) auth, which hamyad serves at `/openapi.json`.
+- **Grok**: grok.com/connectors → New Connector → Custom, public HTTPS only ([connectors](https://docs.x.ai/grok/connectors), [tunneling](https://docs.x.ai/grok/connectors/custom-mcp-tunneling)). Grok CLI also loads `.mcp.json` and `.cursor/mcp.json` ([MCP servers](https://docs.x.ai/build/features/mcp-servers)).
+- **Perplexity**: Account settings → Connectors → Custom connector → Remote, Streamable HTTP or SSE ([help](https://www.perplexity.ai/help-center/en/articles/13915507-adding-custom-remote-connectors)).
+- **Gemini app**: custom Connected Apps for Gemini Spark, US personal accounts only ([help](https://support.google.com/gemini/answer/17209137)); elsewhere a Gem with an uploaded file is the fallback.
+- **Claude.ai**: see section 1.
+
+### Prior art for cross-tool capture
+
+- [git-ai](https://github.com/git-ai-project/git-ai) attributes AI-written lines in git via agent hooks; hamyad journals per-session diffs into the shared brain instead and can read [dibs](https://github.com/mrzroot/dibs)' per-file attribution journal.
+- [Cline Memory Bank](https://docs.cline.bot/best-practices/memory-bank) and `AGENTS.md` are per-repo conventions; hamyad generates the AGENTS.md block from the shared brain so every agent that reads AGENTS.md gets it.

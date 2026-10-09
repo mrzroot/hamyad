@@ -26,7 +26,7 @@ export function gitInit(dir: string) {
 }
 
 export function cli(cwd: string, args: string[], input?: string) {
-  const r = spawnSync(process.execPath, [CLI, ...args], { cwd, encoding: "utf8", input, env: { ...process.env, NO_COLOR: "1" } });
+  const r = spawnSync(process.execPath, [CLI, ...args], { cwd, encoding: "utf8", input, env: { ...process.env, NO_COLOR: "1", HAMYAD_SYNC_PUSH: process.env.HAMYAD_SYNC_PUSH ?? "1" } });
   return { code: r.status, out: r.stdout, err: r.stderr };
 }
 

@@ -1,9 +1,9 @@
 import http from "node:http";
-import { createHttpHandler, HttpOptions } from "../mcp/http.js";
+import { createHttpHandler, HttpOptions, RequestContext } from "../mcp/http.js";
 import type { McpServer } from "../mcp/server.js";
 
 /** Run the web-standard MCP handler on a Node http server. */
-export function serveHttp(getServer: () => McpServer, opts: HttpOptions & { port: number; host?: string }): Promise<http.Server> {
+export function serveHttp(getServer: (ctx: RequestContext) => McpServer, opts: HttpOptions & { port: number; host?: string }): Promise<http.Server> {
   const handler = createHttpHandler(getServer, opts);
   const server = http.createServer(async (req, res) => {
     try {

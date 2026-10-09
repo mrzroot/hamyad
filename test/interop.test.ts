@@ -20,7 +20,7 @@ test("official SDK client over stdio (Claude Code / Desktop path)", async () => 
   try {
     gitInit(dir);
     assert.equal(cli(dir, ["init", "--project", "stdio-demo"]).code, 0);
-    const client = new Client({ name: "sdk-test", version: "1.0.0" });
+    const client = new Client({ name: "claude-code", version: "1.0.0" }); // clientInfo drives attribution
     await client.connect(new StdioClientTransport({ command: process.execPath, args: [CLI, "mcp", "--dir", dir], stderr: "pipe" }));
     assert.equal(client.getServerVersion()?.name, "hamyad");
     assert.match(client.getInstructions() || "", /shared brain/);

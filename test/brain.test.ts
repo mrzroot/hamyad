@@ -68,7 +68,9 @@ test("brief groups entries and hides done/superseded from active lists", async (
   assert.match(brief, /# Project brain: demo/);
   assert.match(brief, /## Context\n- \*\*Stack\*\* — Laravel \+ Vue/);
   assert.match(brief, /Use PostgreSQL/);
-  assert.doesNotMatch(brief, /Use MySQL/);
+  const active = brief.split("## Superseded")[0];
+  assert.doesNotMatch(active, /Use MySQL/);
+  assert.match(brief, /## Superseded[^\n]*\n- ~~Use MySQL~~/);
   assert.match(brief, /## Open tasks\n- \[ \] Ship v1/);
   assert.match(brief, /## Recently done\n- \[x\] Write migration/);
 });

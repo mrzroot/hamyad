@@ -34,7 +34,7 @@ test("laptop <-> GitHub <-> chat-side commits: sync, hooks, safe push", () => {
     assert.equal(start1.code, 0, start1.err);
     const out1 = JSON.parse(start1.out);
     assert.equal(out1.hookSpecificOutput.hookEventName, "SessionStart");
-    assert.match(out1.hookSpecificOutput.additionalContext, /Shared project brain loaded/);
+    assert.match(out1.hookSpecificOutput.additionalContext, /Shared project brain/);
 
     // "Claude chat" writes through GitHub (simulated by another clone + sync)
     const b = path.join(root, "chat");
@@ -48,9 +48,9 @@ test("laptop <-> GitHub <-> chat-side commits: sync, hooks, safe push", () => {
     // next laptop session pulls it in and announces it
     const start2 = JSON.parse(cli(a, ["hook", "session-start"], JSON.stringify({ session_id: "s2", cwd: a, source: "startup" })).out);
     const ctx = start2.hookSpecificOutput.additionalContext;
-    assert.match(ctx, /New since your last Claude Code session/);
+    assert.match(ctx, /DECISIONS CHANGED since your last Claude Code session/);
     assert.match(ctx, /Use Zarinpal for payments/);
-    assert.match(ctx, /\[claude-chat\]/);
+    assert.match(ctx, /\(Claude\.ai chat\)/);
     assert.match(ctx, /fast-forwarded/);
     const md = readFileSync(path.join(a, "CLAUDE.md"), "utf8").replace(/\r\n/g, "\n");
     assert.ok(md.startsWith("# Project rules\n\nAlways run tests.\n"), "user content kept");

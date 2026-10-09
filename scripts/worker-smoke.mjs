@@ -36,8 +36,14 @@ try {
   const init = await (await rpc({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "smoke", version: "0" } } })).json();
   if (init.result?.serverInfo?.name !== "hamyad") throw new Error("bad initialize " + JSON.stringify(init));
   const tools = await (await rpc({ jsonrpc: "2.0", id: 2, method: "tools/list" })).json();
-  if (tools.result.tools.length !== 7) throw new Error("bad tools/list");
-  console.log(`workerd smoke OK: ${init.result.serverInfo.name} ${init.result.serverInfo.version}, ${tools.result.tools.length} tools`);
+  if (tools.result.tools.length !== 8) throw new Error("bad tools/list " + tools.result.tools.length);
+  const gpt = await (await fetch(base + "/mcp/smoke", { method: "POST", headers: { "content-type": "application/json", accept: "application/json", "user-agent": "openai-mcp/1.0" }, body: JSON.stringify({ jsonrpc: "2.0", id: 3, method: "tools/list" }) })).json();
+  if (!gpt.result.tools.some((t) => t.name === "fetch")) throw new Error("ChatGPT search/fetch tools missing");
+  const spec = await (await fetch(base + "/openapi.json")).json();
+  if (spec.openapi !== "3.1.0" || !spec.paths["/api/entries"]) throw new Error("bad openapi.json");
+  const rest = await fetch(base + "/api/context");
+  if (rest.status !== 401) throw new Error("REST must require the token, got " + rest.status);
+  console.log(`workerd smoke OK: ${init.result.serverInfo.name} ${init.result.serverInfo.version}, ${tools.result.tools.length} tools, ChatGPT search/fetch, OpenAPI ${Object.keys(spec.paths).length} paths`);
 } finally {
   dev.kill("SIGTERM");
 }

@@ -3,9 +3,17 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { BLOCK_END } from "../core/render.js";
 
-export function git(cwd: string, args: string[], opts: { allowFail?: boolean } = {}): { ok: boolean; out: string } {
+export function git(cwd: string, args: string[], opts: { allowFail?: boolean; timeout?: number } = {}): { ok: boolean; out: string } {
   try {
-    const out = execFileSync("git", args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], env: { ...process.env, GIT_TERMINAL_PROMPT: "0" } });
+    const out = execFileSync("git", args, {
+      cwd,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      maxBuffer: 64 * 1024 * 1024,
+      timeout: opts.timeout,
+      // HAMYAD_INTERNAL lets our own post-commit hook ignore brain commits
+      env: { ...process.env, GIT_TERMINAL_PROMPT: "0", HAMYAD_INTERNAL: "1" },
+    });
     return { ok: true, out: out.trim() };
   } catch (e: any) {
     if (!opts.allowFail) throw new Error(`git ${args.join(" ")} failed: ${(e.stderr || e.message || "").toString().trim()}`);
@@ -35,7 +43,7 @@ export function pullFastForward(root: string, rep: SyncReport) {
     rep.skipped.push("pull: branch has no upstream");
     return;
   }
-  const f = git(root, ["fetch", "--quiet"], { allowFail: true });
+  const f = git(root, ["fetch", "--quiet"], { allowFail: true, timeout: 20000 });
   if (!f.ok) {
     rep.skipped.push(`pull: fetch failed (${f.out.split("\n")[0]})`);
     return;
@@ -84,14 +92,15 @@ export function claudeMdOnlyBlockChanged(root: string, rel = "CLAUDE.md"): boole
   const head = git(root, ["show", `HEAD:${rel}`], { allowFail: true });
   const now = readFileSync(abs, "utf8");
   // Not tracked yet: only safe when the file is nothing but our block (we created it).
-  if (!head.ok) return now.includes(BLOCK_END) && stripBlock(now).replace(/^\s*# CLAUDE\.md\s*/, "").trim() === "";
+  if (!head.ok) return now.includes(BLOCK_END) && stripBlock(now).replace(/^\s*# [\w.-]+\.md\s*/, "").trim() === "";
   return stripBlock(head.out).replace(/\s+/g, "") === stripBlock(now).replace(/\s+/g, "");
 }
 
 /** Commit .brain/ (and CLAUDE.md when only our block changed). Returns the short sha. */
-export function commitBrain(root: string, brainRel: string, message: string, rep: SyncReport) {
-  const paths = [brainRel];
-  if (claudeMdOnlyBlockChanged(root)) paths.push("CLAUDE.md");
+export function commitBrain(root: string, brainRel: string | string[], message: string, rep: SyncReport, instructionFiles: string[] = ["CLAUDE.md"]) {
+  const paths = (Array.isArray(brainRel) ? brainRel : [brainRel]).filter(Boolean);
+  for (const f of instructionFiles) if (claudeMdOnlyBlockChanged(root, f)) paths.push(f);
+  if (!paths.length) return;
   git(root, ["add", "-A", "--", ...paths]);
   const staged = git(root, ["diff", "--cached", "--name-only", "--", ...paths]).out;
   if (!staged) return;

@@ -2,181 +2,215 @@
 
 # hamyad · هم‌یاد
 
-**One shared project brain for Claude Code, Claude.ai chat, Claude Desktop and GitHub.**
+**One shared brain for every AI you use on a project.**
+ChatGPT · Claude (Code, Desktop, claude.ai) · Codex · Gemini (CLI + app) · Grok · Perplexity · Cursor · Copilot · Windsurf · Zed · Cline/Roo · JetBrains · aider · anything with MCP, REST or a file upload.
 
 [![CI](https://github.com/mrzroot/hamyad/actions/workflows/ci.yml/badge.svg)](https://github.com/mrzroot/hamyad/actions/workflows/ci.yml)
 [![release](https://img.shields.io/github/v/release/mrzroot/hamyad)](https://github.com/mrzroot/hamyad/releases)
 [![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![runtime deps: 0](https://img.shields.io/badge/runtime%20deps-0-blue)
 
-[Website & live demo](https://mrzroot.github.io/hamyad/) · [فارسی](README.fa.md) · [Research: what exists today](RESEARCH.md)
+[Website & live demo](https://mrzroot.github.io/hamyad/) · [فارسی](README.fa.md) · [Research](RESEARCH.md) · [Changelog](CHANGELOG.md)
 
 </div>
 
-*hamyad* (هم‌یاد, "remembering together") gives a project **one memory** that every Claude surface reads and writes:
-a `.brain/` folder of plain Markdown in your repo, exposed as an MCP server over **stdio** (Claude Code, Claude Desktop)
-and **remote HTTP** (a claude.ai custom connector you can host free on Cloudflare Workers). GitHub is the source of truth.
-
-## The problem
-
-Today the same project lives on three islands that do not talk to each other:
-
-| Surface | What it remembers | Where | Shared with the others? |
-|---|---|---|---|
-| **Claude Code** (CLI) | `CLAUDE.md` + auto memory (`~/.claude/projects/<repo>/memory/`) | your disk, per machine | no |
-| **Claude.ai Projects** (chat) | project knowledge, custom instructions, project-scoped chat memory | Anthropic's cloud | no; the GitHub integration is **read-only** and syncs only when you press *Sync now* |
-| **Claude Desktop** | its own chats + local MCP servers | your disk / cloud | no |
-
-A decision you make in a claude.ai chat never reaches Claude Code, and what Claude Code learned in a session never reaches the chat.
-Details and links: [RESEARCH.md](RESEARCH.md).
-
-## How hamyad fixes it
-
 ```
- Claude.ai chat / mobile ──remote MCP──▶ Cloudflare Worker ──GitHub API (1 commit per write)──┐
- Claude Desktop ───────────stdio MCP───▶ hamyad mcp ──────────────┐                           ▼
- Claude Code ──────stdio MCP + hooks───▶ hamyad mcp ──▶ .brain/*.md  ◀── git pull / push ──▶ GitHub repo
-                     SessionStart: pull ▸ refresh CLAUDE.md ▸ "new since last session"     (source of truth)
-                     SessionEnd:   summarise transcript ▸ commit ▸ safe push
+        ChatGPT ─┐   claude.ai ─┐   Gemini app ─┐   Grok ─┐   Perplexity ─┐        (remote MCP · GPT Action/REST · MEMORY.md)
+                 ▼              ▼               ▼         ▼               ▼
+              ┌───────────────────────────────────────────────────────────────┐
+              │   .brain/   decisions · tasks · notes · context ·             │ ◀── git / Dropbox / Drive / any shared folder
+              │             sessions (every chat) · changes (every diff)      │     or ONE MEMORY.md file
+              └───────────────────────────────────────────────────────────────┘
+                 ▲          ▲          ▲          ▲          ▲         ▲        ▲
+   Claude Code ──┘  Codex ──┘ Cursor ──┘ Copilot ─┘ Gemini CLI┘Windsurf┘ aider ─┘   (hooks + MCP + AGENTS.md/CLAUDE.md)
 ```
 
-- **Same tools everywhere**: `brain_context`, `brain_remember`, `brain_search`, `brain_list`, `brain_get`, `brain_update`, `brain_log_session`.
-- **Plain files**: one Markdown file per decision / task / note / context fact / session. Readable on github.com, reviewable in PRs, editable by hand, mergeable (unique file names, so two writers do not conflict).
-- **Claude Code hooks** pull what the chat side wrote, refresh a generated block in `CLAUDE.md`, and inject *"New since your last Claude Code session"* into context. When the session ends, they write an LLM-free session summary (prompts, files changed, commits, outcome) and push it so the chat side sees it.
-- **Safe git**: fast-forward only; pushes only when every unpushed commit is a `brain:` commit; never commits your own edits to `CLAUDE.md`.
-- **Zero runtime dependencies**, Node ≥ 18. The MCP core is hand-written and tested against the official MCP SDK client.
-- **Persian-aware search**: ي/ی, ك/ک, ZWNJ and ۱۲۳/123 all match.
+You decide *"use FastAPI, not Flask"* in a ChatGPT chat. Five minutes later Codex, Claude Code, Cursor and Gemini CLI open a
+session and the first thing their model reads is:
+
+```
+⚠ DECISIONS CHANGED since your last Codex session (2026-10-09 15:57 UTC). Follow the new ones; do not act on the old ones:
+- REPLACED: "Use Flask for the API" `d-20261009-7w8i` → "Use FastAPI for the API" `d-20261009-hd8h` (ChatGPT) — async + OpenAPI
+Other tools' sessions since then:
+- [Claude Code] add claude_feature.py please `s-20261009-dhja`
+- [Gemini CLI] add gemini_feature.py please `s-20261009-juqx`
+```
+
+…and every chat app sees what the coding agents did: each agent session is summarised (prompts, files, outcome) and its
+**git diff** is journaled, attributed to the tool. That exact flow runs in CI-style e2e tests against the *real* Claude Code,
+Codex, Gemini CLI, Copilot CLI and aider binaries ([scripts/e2e](scripts/e2e)).
+
+## Connect any AI
+
+`hamyad init --all` wires every coding tool in the repo. `hamyad connect <tool>` prints the exact steps for the rest.
+
+| Tool | How it connects | Setup | Sees at start | Writes back |
+|---|---|---|---|---|
+| **Claude Code** | hooks + MCP + `CLAUDE.md` | ✅ `hamyad init` | brief + “decisions changed” | session summary, git diff, MCP writes |
+| **Codex** CLI / IDE (cloud: AGENTS.md) | hooks + MCP + `AGENTS.md` | ✅ `hamyad init` | brief + “decisions changed” | session summary, git diff, MCP writes |
+| **Cursor** editor + `cursor-agent` | hooks + MCP + rule | ✅ `hamyad init` | brief + “decisions changed” | session summary, git diff, MCP writes |
+| **GitHub Copilot** (VS Code agent, Copilot CLI, cloud agent) | hooks + MCP + `AGENTS.md` | ✅ `hamyad init` | brief + “decisions changed” | session summary, git diff, MCP writes |
+| **Gemini CLI** / Code Assist agent | hooks + MCP + `AGENTS.md` | ✅ `hamyad init` | brief + “decisions changed” | session summary, git diff, MCP writes |
+| **Windsurf** / Devin Desktop | hooks + rule (+ MCP with `--global`) | ✅ `hamyad init` | brief + changes on first prompt | Cascade transcript summary, git diff |
+| **Zed** agent | MCP (`.zed/settings.json`) + `AGENTS.md` | ✅ `--tools zed` | brief | MCP writes |
+| **Roo Code** / **Cline** | MCP (`.roo/mcp.json`; Cline: paste) | ✅ / 1 min | brief | MCP writes |
+| **JetBrains** Junie / AI Assistant | MCP (`.junie/mcp/mcp.json`; AI Assistant: paste) | ✅ / 1 min | brief | MCP writes |
+| **aider** | `read: AGENTS.md` + chat import on commit | ✅ `hamyad init` | brief | chat summary (post-commit hook) |
+| **Claude Desktop** | local MCP | ✅ `--global` | `brain_context` | MCP writes |
+| **ChatGPT** (web, desktop, mobile) | remote MCP connector (developer mode) **or** Custom GPT Action (OpenAPI) **or** MEMORY.md | 2 min | `brain_context` / search+fetch | decisions (with supersede), tasks, notes, chat summaries |
+| **Claude.ai** (web, mobile, Projects) | remote MCP connector or MEMORY.md in Project knowledge | 2 min | `brain_context` | same |
+| **Grok** (grok.com; Grok CLI reads `.mcp.json`) | remote MCP connector | 2 min | `brain_context` | same |
+| **Perplexity** | remote MCP connector (Mac app: local MCP) | 2 min | `brain_context` | same |
+| **Gemini app** | custom app (MCP, where available) or MEMORY.md in a Gem | 2 min | MEMORY.md / connector | via connector |
+| **Anything else** | stdio MCP · Streamable-HTTP MCP · REST + OpenAPI 3.1 · `MEMORY.md` | — | whatever it can read | MCP or REST |
+
+### Chat apps (they run in the cloud, so they need a public URL)
+
+Pick one:
+
+- **Cloudflare Worker over your GitHub repo** (free tier, every write is a commit): see [worker/README.md](worker/README.md).
+- **No GitHub:** `hamyad serve --host 0.0.0.0 --token $HAMYAD_TOKEN` next to your shared folder or MEMORY.md, then `cloudflared tunnel --url http://localhost:8787` (or ngrok).
+
+Then, with `URL=https://hamyad.<you>.workers.dev` and your token:
+
+| App | Where | Value |
+|---|---|---|
+| ChatGPT · MCP | turn on **Developer mode** (Settings → Apps → Advanced; workspace admins enable it for Business/Enterprise), then [chatgpt.com/plugins](https://chatgpt.com/plugins) → **+ → Add custom MCP server** | `URL/mcp/<TOKEN>?source=chatgpt`, auth none. Also exposes read-only `search`/`fetch`, so deep research can use it. |
+| ChatGPT · GPT Action | Create a GPT → Configure → **Actions → Import from URL** | `URL/openapi.json`, Authentication **API key → Bearer → `<TOKEN>`** |
+| Claude.ai | Customize → Connectors → **Add custom connector** | `URL/mcp/<TOKEN>?source=claude-chat` |
+| Grok | grok.com/connectors → **New Connector → Custom** | `URL/mcp/<TOKEN>?source=grok` |
+| Perplexity | Account settings → Connectors → **+ Custom connector → Remote** (Streamable HTTP, auth none) | `URL/mcp/<TOKEN>?source=perplexity` |
+| Gemini app | Settings & help → Connected Apps → **Add a custom app** (Gemini Spark; US personal accounts) | `URL/mcp/<TOKEN>?source=gemini-app` — elsewhere: add `MEMORY.md` to a Gem |
+| Any upload-only tool | attach / knowledge file | `.brain/MEMORY.md` (always fresh) or `URL/api/memory.md?key=<TOKEN>` |
+
+Paste `hamyad connect instructions` into the Project / GPT / Gem / Space instructions so the model calls `brain_context` first and
+`brain_remember` when you decide something. Writes are attributed per app (`?source=`, the client's MCP `clientInfo`, or its User-Agent).
 
 ## Quick start
 
 ```bash
-# 1. install (npm package coming; until then from the release tarball)
-npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.1.0/hamyad-0.1.0.tgz
+npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.2.0/hamyad-0.2.0.tgz
 
-# 2. in your repo
 cd my-project
-hamyad init                      # .brain/, .mcp.json, .claude/settings.json hooks, CLAUDE.md block
-git add .brain .mcp.json .claude/settings.json CLAUDE.md && git commit -m "Add hamyad brain" && git push
-
-# 3. print the exact setup for claude.ai, Claude Desktop and your Project instructions
-hamyad connect
+hamyad init --all            # .brain/ + MCP configs + hooks for Claude Code, Codex, Gemini CLI, Cursor, Copilot,
+                             # Windsurf, Zed, Roo, Junie, aider + CLAUDE.md/AGENTS.md brief + git post-commit trigger
+git add -A && git commit -m "Add hamyad brain" && git push
+hamyad import                # pull in past chats from tools you already used here (Claude Code, Codex, Gemini, Copilot, Cursor, Windsurf, aider)
+hamyad connect chatgpt       # or claude-ai, grok, perplexity, gemini-app, cline, jetbrains, any …
+hamyad status                # which tools are wired, last session of each
 ```
 
-Then in Claude Code: approve the `hamyad` MCP server once. That is it for the CLI side.
-
-### Claude.ai chat (web, desktop chat, mobile) via a remote connector
-
-claude.ai reaches custom connectors **from Anthropic's cloud**, so the server must be public. The free Cloudflare Workers plan is enough
-(and because the call comes from Anthropic, not from your device, local filtering of `workers.dev` does not matter).
+**No GitHub?** Put the brain in any synced folder, or in a single file:
 
 ```bash
-git clone https://github.com/mrzroot/hamyad && cd hamyad && npm ci && npm run build
-cd worker
-# edit wrangler.toml: GITHUB_REPO = "you/my-project"
-npx wrangler deploy
-npx wrangler secret put GITHUB_TOKEN    # fine-grained PAT: only my-project, Contents: Read and write
-npx wrangler secret put HAMYAD_TOKEN    # a long random string, e.g. `openssl rand -hex 24`
+hamyad init --all --store ~/Dropbox/brains/shop/MEMORY.md     # one Markdown file is the whole brain
+hamyad init --all --store "~/Google Drive/brains/shop"         # or a folder (gets a MEMORY.md export too)
 ```
 
-In claude.ai: **Customize → Connectors → Add custom connector**
+`.hamyad.json` points the repo at the store; every machine and tool that sees that folder shares the brain. The single-file store re-reads before each write and swaps atomically, so two writers do not clobber each other.
 
-- URL: `https://hamyad.<you>.workers.dev/mcp/<HAMYAD_TOKEN>` with *No sign in*, **or**
-- URL: `https://hamyad.<you>.workers.dev/mcp` with request header `Authorization: Bearer <HAMYAD_TOKEN>`.
+## Decisions that change: supersession
 
-Paste the text printed by `hamyad connect` into your Project's **custom instructions** so Claude calls `brain_context` at the start of each chat and `brain_remember` when you decide something.
-Optional read-only fallback: add `.brain/BRAIN.md` to the Project's knowledge through the GitHub integration.
+- `brain_remember { kind: "decision", title: "Use FastAPI", supersedes: ["d-…flask"] }` (or `hamyad add decision "…" --supersedes id`, or `hamyad supersede old new`) marks the old entry `status: superseded`, links both ways, and stamps a dated note.
+- When a new decision *looks* like it conflicts with one still in force (shared topic words or tags), hamyad tells the model and asks it to confirm instead of guessing.
+- The brief lists superseded items under **“Superseded — do NOT follow”**.
+- Every tool keeps its own "last seen" time, so at session start each agent gets **“⚠ DECISIONS CHANGED since your last <tool> session”**. If another tool changes a decision *during* a session, the next prompt hook tells the agent.
 
-Prefer self-hosting? `hamyad serve --host 0.0.0.0 --port 8787 --token $HAMYAD_TOKEN --github you/my-project` (GitHub-backed) or, inside a clone,
-`hamyad serve --token … --git` (writes files and commits + pushes each write). Put it behind HTTPS.
+## When memory updates (triggers)
 
-### Claude Desktop (local)
+| Trigger | What runs | Tools |
+|---|---|---|
+| **Session start** | commit leftovers → fast-forward pull → refresh CLAUDE.md / AGENTS.md / MEMORY.md → snapshot the working tree → inject the brief + “decisions changed” | Claude Code, Codex, Gemini CLI, Cursor, Copilot (Windsurf: first prompt) |
+| **Each prompt** | record the prompt (redacted); warn if another tool changed a decision meanwhile | same |
+| **Turn end** (`Stop`, `AfterAgent`, `agentStop`, `post_cascade_response_with_transcript`) | upsert this session's summary + change set (git diff since session start) | same + Windsurf |
+| **Session end** | final capture → commit `.brain/` → push in the background (never blocks the agent) | same |
+| **MCP / REST write** (`brain_remember`, `brain_update`, `brain_log_session`) | write the entry → regenerate MEMORY.md and instruction files (Worker: refresh `.brain/MEMORY.md` on GitHub) | every MCP/REST client, chat apps included |
+| **git commit** (post-commit hook) | import aider's chat, refresh exports | everyone, aider especially |
+| **Timer** (`hamyad watch --interval 300`, or cron `hamyad sync --import`) | pull → import local chat logs → regenerate → commit → push | tools without hooks, other machines |
+| **Manual** | `hamyad sync`, `hamyad import`, `hamyad export --out FILE` | — |
 
-```json
-{
-  "mcpServers": {
-    "hamyad": { "command": "hamyad", "args": ["mcp", "--dir", "/path/to/my-project", "--source", "claude-desktop"] }
-  }
-}
+## What gets captured, and privacy
+
+| Setting (`.brain/config.json` → `capture`) | Default | Effect |
+|---|---|---|
+| `sessions` | `"summary"` | `off` = nothing; `summary` = prompts (clipped to 300 chars), files touched, last reply; `full` = also a redacted transcript in `.brain/transcripts/<tool>/` |
+| `changes` / `patch` | `true` / `true` | change journal: diffstat + clipped patch per session |
+| `redact` | `true` | API keys (OpenAI, Anthropic, GitHub, AWS, Google, Slack, Stripe, npm…), JWTs, bearer tokens, private keys, URL passwords, `password=`-style assignments → `[REDACTED:…]`. Applied to every entry. |
+| `exclude` | `[".env", "secrets/"]` | never diffed |
+| `maxPatchBytes` / `maxTranscriptBytes` / `maxPromptChars` | 12000 / 150000 / 300 | size limits |
+| `tools` | all on | per-tool switch, e.g. `{ "cursor": false }` |
+
+`hamyad init --capture off|summary|full` sets it. Transcripts are opt-in. Session records and the hook error log stay machine-local in `.git/hamyad/`.
+
+The change journal snapshots the working tree when a session starts (a temporary git index, no commits) and diffs it at each turn end, so it
+captures uncommitted edits too. If two agents work in the same checkout at the same time, both see the combined diff; with
+[dibs](https://github.com/mrzroot/dibs) installed, hamyad adds dibs' per-file attribution to the change entry.
+
+## Timeline
+
 ```
+$ hamyad timeline
+2026-10-09
+  15:57  💬 [Codex]            what framework do we use?
+  15:57  ✗ [ChatGPT]          superseded: Use Flask for the API → Use FastAPI for the API
+  15:57  ◆ [ChatGPT]          decided: Use FastAPI for the API (active)
+  15:57  ± [GitHub Copilot]   1 file(s) +1 −0 — add copilot_feature.py please
+  15:57  💬 [Gemini CLI]       add gemini_feature.py please
+  15:57  ● [you]              aider target (dev)
+```
+
+Chats, change sets, decisions, supersessions, tasks, git commits (agent-attributed from `Co-authored-by` trailers / aider author tags) and dibs edits, newest first. `--tool codex`, `--since`, `--json`. Chat apps get the same view through `brain_timeline` / `GET /api/timeline`.
 
 ## What lands in your repo
 
 ```
 .brain/
-├── config.json        project name, brief size, git behaviour
-├── BRAIN.md           generated brief (good for Claude.ai Project knowledge)
-├── decisions/d-20261009-k3x9-use-postgres.md
-├── tasks/t-20261009-7hqa-sms-login.md
-├── notes/  context/  sessions/
-CLAUDE.md              your content + a generated <!-- hamyad:begin --> … <!-- hamyad:end --> block
-.mcp.json              { "mcpServers": { "hamyad": { "command": "hamyad", "args": ["mcp"] } } }
-.claude/settings.json  SessionStart / SessionEnd hooks (merged with yours)
+├── config.json         project, capture/privacy settings, exports, instruction files
+├── MEMORY.md           the whole brain in one file (upload it anywhere; re-importable)
+├── BRAIN.md            human-readable brief
+├── decisions/ tasks/ notes/ context/
+├── sessions/           one summary per chat / agent session, attributed to the tool
+├── changes/            change journal: what each agent session changed
+└── transcripts/        only with capture.sessions = "full"
+CLAUDE.md, AGENTS.md    your content + a generated <!-- hamyad:begin --> block
+.mcp.json .codex/ .gemini/ .cursor/ .github/hooks/ .vscode/mcp.json .windsurf/ .devin/ .zed/ .roo/ .junie/ .aider.conf.yml
 ```
 
-An entry:
+## Interfaces
 
-```markdown
----
-id: d-20261009-k3x9
-kind: decision
-title: Use PostgreSQL, not MySQL
-status: active
-tags: [db]
-source: claude-chat
-created: 2026-10-09T14:02:11.000Z
-updated: 2026-10-09T14:02:11.000Z
----
-JSONB for the product catalogue; team already runs Postgres. MySQL rejected.
-```
+**MCP tools** (stdio and Streamable HTTP): `brain_context` (optional `since`), `brain_remember` (with `supersedes`, returns conflict hints), `brain_search`, `brain_list`, `brain_get`, `brain_update` (with `superseded_by`), `brain_timeline`, `brain_log_session`; for ChatGPT also `search` and `fetch`. Resource `brain://brief`, prompts `brain_kickoff`, `brain_wrapup`.
 
-## MCP tools
+**REST** (same auth: `Authorization: Bearer`, `X-Hamyad-Key` or `?key=`): `GET /api/context?since=`, `GET /api/search?q=`, `GET|POST /api/entries`, `GET|PATCH /api/entries/{id}`, `POST /api/sessions`, `GET /api/timeline`, `GET /api/memory.md`; schema at `GET /openapi.json`.
 
-| Tool | What it does |
-|---|---|
-| `brain_context` | Compact brief: context, active decisions, open tasks, recent notes and sessions |
-| `brain_remember` | Save a `decision`, `task`, `note` or `context` entry (one commit on GitHub) |
-| `brain_search` | Keyword search, English + Persian aware |
-| `brain_list` | Filter by kind / status / tag |
-| `brain_get` | Full entry by id (or unique id suffix) |
-| `brain_update` | Change status, append a dated follow-up, retitle, retag |
-| `brain_log_session` | Save a chat summary so the next Claude Code session sees it |
-
-Also a `brain://brief` resource and the prompts `brain_kickoff` and `brain_wrapup` ("save everything we decided in this chat").
-
-## CLI
+**CLI**
 
 ```
-hamyad init | status | sync | connect
-hamyad add <decision|task|note|context> "title" [-m body] [-t tags] [-s status]
-hamyad list [kind] · search "q" · show <id> · done <id> · update <id> --status … --append …
-hamyad context            print what Claude sees
-hamyad absorb             copy Claude Code's machine-local auto memory into the shared brain
-hamyad mcp | serve | hook session-start|session-end
+hamyad init [--all | --tools a,b] [--global] [--store PATH] [--capture MODE]   hamyad connect [tool] [--url URL]
+hamyad add <decision|task|note|context> "title" [-m body] [-t tags] [--supersedes ids]   hamyad supersede <old> <new>
+hamyad list | search | show | done | update | context [--since] [--tool]          hamyad timeline [--tool] [--since] [--json]
+hamyad import [tool…] [--dry-run]   hamyad sync [--import]   hamyad watch [--interval 300]   hamyad export [--out FILE]
+hamyad status   hamyad mcp   hamyad serve   hamyad hook <tool> <event>   hamyad absorb
 ```
 
-## How it compares
+## Verified vs. needs an account
 
-| | Claude Projects + GitHub | basic-memory | mcp-memory-service | Mem0 MCP | **hamyad** |
-|---|---|---|---|---|---|
-| Writes back from chat | no (read-only, manual sync) | via its cloud tier | yes (self-host server) | yes (hosted) | **yes, as git commits** |
-| Lives in *your repo* / reviewable in PRs | n/a | no (separate notes dir) | no (DB) | no | **yes** |
-| Claude Code hooks + CLAUDE.md sync | no | no | own hooks (DB-backed) | no | **yes** |
-| Free hosting for claude.ai | n/a | paid cloud | self-host | hosted | **Workers free tier** |
-| Semantic / vector search | n/a | yes | yes | yes | no (keyword; v0.2 maybe) |
-| License | n/a | AGPL-3.0 | Apache-2.0 | Apache-2.0 | **MIT** |
+| Verified on real binaries against a mock model server ([scripts/e2e](scripts/e2e), 46 checks) | Verified by config parsing / unit tests only | Needs a real account to try |
+|---|---|---|
+| Claude Code 2.1, Codex 0.162, Gemini CLI 0.63, Copilot CLI 1.0, aider: hooks fire, sessions + diffs captured and attributed, hamyad MCP tools offered to the model, “DECISIONS CHANGED” reaches the model after a ChatGPT-style supersede over HTTP | `claude/codex/gemini mcp list` read the generated configs; `cursor-agent mcp list` sees `hamyad`; Cursor/Windsurf hook payloads, Zed/Roo/Junie/VS Code configs, REST/OpenAPI, ChatGPT search/fetch, Worker on workerd (CI) | ChatGPT, claude.ai, Grok, Perplexity, Gemini app connectors; Cursor IDE & Windsurf sessions; JetBrains, Zed, Cline UIs |
 
 ## Limits (honest)
 
-- Claude.ai's own *project memory* and *custom instructions* have no public API, so hamyad cannot read or write them. It sits beside them as the shared, durable layer, and Claude uses it because the instructions you paste tell it to.
-- No OAuth yet: the connector uses a shared secret (URL path or header). Fine for one person; for a team prefer per-person deployments.
-- Search is keyword-based. Brains stay small (hundreds of files), and the brief is what matters most.
-- Concurrent edits of the *same* entry from two places: the GitHub backend detects it (sha check) and asks to retry; locally git handles it.
+- Chat apps' own memories (ChatGPT memory, Claude project memory) have no API; hamyad sits beside them, and the model uses it because the connector and your instructions tell it to. Chats are only captured when the model calls `brain_log_session` (the instructions ask it to); hamyad cannot scrape cloud chat history.
+- The remote endpoint uses a shared token (URL path, header or `?key=`), no OAuth yet. Use one deployment per person or team.
+- Search is keyword-based (Persian-aware). Conflict detection is a heuristic that *suggests*; supersession happens only with explicit ids.
+- Agent log formats are internal to each tool; importers are tolerant and covered by real fixtures, but may need updates when tools change.
 
 ## Develop
 
 ```bash
-npm ci && npm test          # 36 tests: unit, git round trip with a bare remote, MCP SDK interop (stdio + HTTP), Worker
-npm run bundle:worker       # proves the Worker bundle has no Node built-ins
+npm ci && npm test            # unit + git round trip + MCP SDK interop + hooks/importers/REST (54 tests)
+python3 scripts/e2e/mock.py & python3 scripts/e2e/run.py    # real agent CLIs against the mock model
+npm run bundle:worker
 ```
 
-MIT © [Mohammadreza Zare (M-R-Z)](https://github.com/mrzroot)
+Prior art and links: [RESEARCH.md](RESEARCH.md). MIT © [Mohammadreza Zare (M-R-Z)](https://github.com/mrzroot)

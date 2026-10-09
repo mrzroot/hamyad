@@ -4,12 +4,14 @@
  * Claude's GitHub integration can all read them without any tooling.
  */
 
-export const KINDS = ["decision", "task", "note", "context", "session"] as const;
+export const KINDS = ["decision", "task", "note", "context", "session", "change"] as const;
 export type Kind = (typeof KINDS)[number];
 
 export const TASK_STATUSES = ["open", "doing", "blocked", "done", "dropped"] as const;
 export type TaskStatus = (typeof TASK_STATUSES)[number];
 export const DECISION_STATUSES = ["active", "superseded", "reverted"] as const;
+/** Kinds whose entries state something that later entries can replace. */
+export const SUPERSEDABLE: readonly Kind[] = ["decision", "context", "note"];
 
 export const FOLDER: Record<Kind, string> = {
   decision: "decisions",
@@ -17,9 +19,10 @@ export const FOLDER: Record<Kind, string> = {
   note: "notes",
   context: "context",
   session: "sessions",
+  change: "changes",
 };
 
-const PREFIX: Record<Kind, string> = { decision: "d", task: "t", note: "n", context: "c", session: "s" };
+const PREFIX: Record<Kind, string> = { decision: "d", task: "t", note: "n", context: "c", session: "s", change: "x" };
 
 export interface Entry {
   id: string;
@@ -35,6 +38,12 @@ export interface Entry {
   path: string;
   /** opaque version token from the backend (git blob sha on GitHub) */
   sha?: string;
+  /** ids of older entries this one replaces */
+  supersedes?: string[];
+  /** id of the entry that replaced this one */
+  supersededBy?: string;
+  /** capture key `<tool>:<session id>` for session/change entries written by hooks and importers */
+  session?: string;
 }
 
 export function isKind(k: unknown): k is Kind {
@@ -112,7 +121,11 @@ export function serializeEntry(e: Entry): string {
   const lines = ["---", `id: ${e.id}`, `kind: ${e.kind}`, `title: ${quote(e.title)}`];
   if (e.status) lines.push(`status: ${quote(e.status)}`);
   lines.push(`tags: [${e.tags.map(quote).join(", ")}]`);
-  lines.push(`source: ${quote(e.source)}`, `created: ${e.created}`, `updated: ${e.updated}`, "---", "");
+  lines.push(`source: ${quote(e.source)}`, `created: ${e.created}`, `updated: ${e.updated}`);
+  if (e.supersedes?.length) lines.push(`supersedes: [${e.supersedes.map(quote).join(", ")}]`);
+  if (e.supersededBy) lines.push(`superseded_by: ${quote(e.supersededBy)}`);
+  if (e.session) lines.push(`session: ${quote(e.session)}`);
+  lines.push("---", "");
   const body = e.body.replace(/\s+$/, "");
   return lines.join("\n") + (body ? body + "\n" : "");
 }
@@ -134,12 +147,14 @@ export function parseEntry(path: string, text: string, sha?: string): Entry | un
   if (!kind) return undefined;
   const base = path.split("/").pop()!.replace(/\.md$/, "");
   const id = meta.id ? unquote(meta.id) : base;
-  let tags: string[] = [];
-  if (meta.tags) {
-    const t = meta.tags.trim();
+  const list = (v?: string) => {
+    if (!v) return [];
+    const t = v.trim();
     const inner = t.startsWith("[") && t.endsWith("]") ? t.slice(1, -1) : t;
-    tags = splitList(inner).map(unquote).filter(Boolean);
-  }
+    return splitList(inner).map(unquote).filter(Boolean);
+  };
+  const tags = list(meta.tags);
+  const supersedes = list(meta.supersedes);
   // Hand-written files without frontmatter: first heading becomes the title.
   let title = meta.title ? unquote(meta.title) : "";
   if (!title) {
@@ -158,6 +173,9 @@ export function parseEntry(path: string, text: string, sha?: string): Entry | un
     updated: meta.updated ? unquote(meta.updated) : meta.created ? unquote(meta.created) : "",
     path,
     sha,
+    ...(supersedes.length ? { supersedes } : {}),
+    ...(meta.superseded_by ? { supersededBy: unquote(meta.superseded_by) } : {}),
+    ...(meta.session ? { session: unquote(meta.session) } : {}),
   };
 }
 

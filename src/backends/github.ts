@@ -68,6 +68,7 @@ export class GitHubBackend implements Backend {
       for (const ent of node?.entries || []) {
         const p = prefix ? `${prefix}/${ent.name}` : ent.name;
         if (ent.name.startsWith(".")) continue;
+        if (!prefix && ent.name === "transcripts") continue;
         if (ent.type === "tree") walk(ent.object, p);
         else if (ent.type === "blob" && ent.object && !ent.object.isBinary && /\.(md|json)$/.test(ent.name))
           out.push({ path: p, content: ent.object.text ?? "", sha: ent.object.oid });

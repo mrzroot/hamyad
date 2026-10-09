@@ -4,7 +4,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { cli, gitInit, rm, sh, tmp } from "./helpers.js";
 import { init, mergeHooks } from "../src/node/init.js";
-import { summarizeTranscript, sessionEntryBody } from "../src/node/hooks.js";
+import { sessionBody } from "../src/node/hooks.js";
+import { parseClaude } from "../src/node/transcripts.js";
 import { parseArgs } from "../src/cli.js";
 import { autoMemoryDir } from "../src/node/absorb.js";
 
@@ -21,8 +22,8 @@ test("init is idempotent and preserves existing config files", async () => {
     const settings = JSON.parse(readFileSync(path.join(dir, ".claude", "settings.json"), "utf8"));
     assert.deepEqual(settings.permissions, { allow: ["Bash(ls)"] });
     assert.deepEqual(settings.hooks.SessionStart[0].hooks[0], userHook);
-    assert.equal(settings.hooks.SessionStart[1].hooks[0].command, "hamyad hook session-start");
-    assert.equal(settings.hooks.SessionEnd[0].hooks[0].command, "hamyad hook session-end");
+    assert.equal(settings.hooks.SessionStart[1].hooks[0].command, "hamyad hook claude SessionStart");
+    assert.equal(settings.hooks.SessionEnd[0].hooks[0].command, "hamyad hook claude SessionEnd");
     const mcp = JSON.parse(readFileSync(path.join(dir, ".mcp.json"), "utf8"));
     assert.ok(mcp.mcpServers.other && mcp.mcpServers.hamyad);
     const md = readFileSync(path.join(dir, "CLAUDE.md"), "utf8");
@@ -42,7 +43,7 @@ test("mergeHooks updates our hook command in place instead of duplicating", () =
   const a = mergeHooks({}, "hamyad");
   const b = mergeHooks(a, "npx -y hamyad");
   assert.equal(b.hooks.SessionStart.length, 1);
-  assert.equal(b.hooks.SessionStart[0].hooks[0].command, "npx -y hamyad hook session-start");
+  assert.equal(b.hooks.SessionStart[0].hooks[0].command, "npx -y hamyad hook claude SessionStart");
 });
 
 const transcript = [
@@ -58,18 +59,17 @@ const transcript = [
   "not json",
 ].map((l) => (typeof l === "string" ? l : JSON.stringify(l))).join("\n");
 
-test("summarizeTranscript extracts prompts, files, commands and outcome", () => {
-  const s = summarizeTranscript(transcript, "/repo");
-  assert.deepEqual(s.prompts, ["Add SMS login with Kavenegar", "now add rate limiting"]);
-  assert.deepEqual(s.files, ["app/routes.py", "app/sms.py"]);
-  assert.equal(s.commands, 1);
-  assert.equal(s.lastAssistant, "Done: SMS login works, rate limited to 3/min.");
-  assert.equal(s.started, "2026-10-09T10:00:00Z");
-  const body = sessionEntryBody(s, ["abc123 feat: sms"]);
+test("parseClaude + sessionBody extract prompts, files, commands and outcome", () => {
+  const t = parseClaude(transcript);
+  assert.deepEqual(t.turns.filter((x) => x.role === "user").map((x) => x.text), ["Add SMS login with Kavenegar", "now add rate limiting"]);
+  assert.ok(t.files.includes("/repo/app/sms.py") && t.files.includes("/repo/app/routes.py"));
+  assert.equal(t.commands, 1);
+  assert.equal(t.started, "2026-10-09T10:00:00Z");
+  const body = sessionBody({ ...t, tool: "claude-code", sessionId: "s1" }, { maxPromptChars: 300 });
   assert.match(body, /### Asked\n- Add SMS login/);
-  assert.match(body, /### Files changed\n- `app\/routes.py`/);
-  assert.match(body, /### Commits\n- abc123 feat: sms/);
+  assert.match(body, /### Files touched/);
   assert.match(body, /rate limited/);
+  assert.match(body, /1 shell command/);
 });
 
 test("parseArgs handles short flags, =values, --no- and positionals", () => {

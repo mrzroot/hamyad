@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>hamyad · one shared project brain for Claude Code, Claude.ai chat and GitHub</title>
-<meta name="description" content="hamyad (هم‌یاد) gives a project one memory that Claude Code, Claude.ai chat, Claude Desktop and GitHub all share: a git-backed .brain/ folder served over MCP (stdio + remote HTTP on Cloudflare Workers), with Claude Code hooks and a sync CLI. MIT.">
+<title>hamyad · one shared brain for every AI on your project: ChatGPT, Claude, Codex, Gemini, Grok, Cursor, Copilot…</title>
+<meta name="description" content="hamyad (هم‌یاد) connects every AI tool on a project to one shared memory: ChatGPT, Claude Code, Claude.ai, Codex, Gemini, Grok, Perplexity, Cursor, Copilot, Windsurf, Zed, Cline, JetBrains, aider. Chats, decisions and code changes from each tool, visible to all. MCP, REST/OpenAPI or one MEMORY.md. MIT.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://mrzroot.github.io/hamyad/">
-<meta property="og:title" content="hamyad · one project, one brain, every Claude">
-<meta property="og:description" content="Git-backed shared memory for Claude Code, Claude.ai chat, Claude Desktop and GitHub. MCP over stdio and remote HTTP. EN + فارسی.">
+<meta property="og:title" content="hamyad · one project, one brain, every AI">
+<meta property="og:description" content="ChatGPT, Claude, Codex, Gemini, Grok, Cursor, Copilot, Windsurf, aider… all see each other's chats, decisions and code changes. EN + فارسی.">
 <meta property="og:image" content="https://mrzroot.github.io/hamyad/assets/og.png">
 <meta property="og:url" content="https://mrzroot.github.io/hamyad/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"hamyad","applicationCategory":"DeveloperApplication","operatingSystem":"Linux, macOS, Windows, Cloudflare Workers","license":"https://opensource.org/licenses/MIT","url":"https://mrzroot.github.io/hamyad/","codeRepository":"https://github.com/mrzroot/hamyad","softwareVersion":"0.1.0","author":{"@type":"Person","name":"Mohammadreza Zare","url":"https://mrzroot.github.io/"},"offers":{"@type":"Offer","price":"0"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"hamyad","applicationCategory":"DeveloperApplication","operatingSystem":"Linux, macOS, Windows, Cloudflare Workers","license":"https://opensource.org/licenses/MIT","url":"https://mrzroot.github.io/hamyad/","codeRepository":"https://github.com/mrzroot/hamyad","softwareVersion":"0.2.0","author":{"@type":"Person","name":"Mohammadreza Zare","url":"https://mrzroot.github.io/"},"offers":{"@type":"Offer","price":"0"}}</script>
 </head>
 <body>
 <a class="skip" href="#demo" data-t="skip">Skip to the live demo</a>
@@ -25,8 +25,8 @@
     <span class="brand-en">hamyad</span><span class="brand-fa" lang="fa">هم‌یاد</span>
   </a>
   <nav aria-label="Sections">
-    <a href="#problem" data-t="nav.problem">Problem</a>
     <a href="#demo" data-t="nav.demo">Live demo</a>
+    <a href="#connect" data-t="nav.connect">Connect any AI</a>
     <a href="#how" data-t="nav.how">How it works</a>
     <a href="#setup" data-t="nav.setup">Setup</a>
     <a href="#compare" data-t="nav.compare">Compare</a>
@@ -45,67 +45,79 @@
 <!-- ============================================================ HERO -->
 <section class="hero">
   <div class="hero-copy">
-    <p class="kicker"><span class="stamp-s">v0.1.0</span> <span data-t="hero.kicker">MIT · MCP server · zero runtime dependencies</span></p>
-    <h1 data-t="hero.h1">One project.<br>One brain.<br><em>Every Claude.</em></h1>
-    <p class="lede" data-t="hero.lede">Claude Code, Claude.ai chat and Claude Desktop each remember your project on their own island. <b>hamyad</b> gives them one shared memory: a <code>.brain/</code> folder of plain Markdown in your repo, served over MCP, with GitHub as the source of truth.</p>
+    <p class="kicker"><span class="stamp-s">v0.2.0</span> <span data-t="hero.kicker">MIT · MCP + REST · zero runtime dependencies</span></p>
+    <h1 data-t="hero.h1">One project.<br>One brain.<br><em>Every AI.</em></h1>
+    <p class="lede" data-t="hero.lede">You plan in ChatGPT, argue architecture with Claude, ask Grok and Perplexity, and let Codex, Claude Code, Cursor, Copilot and Gemini write the code. Each one remembers alone. <b>hamyad</b> gives all of them <b>one shared brain</b>: every chat, decision and code change, attributed to the tool that made it, and visible to all the others the next time they start.</p>
     <div class="cta">
-      <a class="btn btn-ink" href="#demo" data-t="hero.cta1">Run the live demo</a>
-      <a class="btn btn-ghost" href="https://github.com/mrzroot/hamyad" data-t="hero.cta2">Read the code</a>
+      <a class="btn btn-ink" href="#demo" data-t="hero.cta1">Watch five AIs share one brain</a>
+      <a class="btn btn-ghost" href="#connect" data-t="hero.cta2">Connect your AI</a>
     </div>
     <div class="install" dir="ltr">
-      <div class="install-row"><span class="pr">$</span><code id="install-cmd">npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.1.0/hamyad-0.1.0.tgz</code><button class="copy" data-copy="#install-cmd" type="button" aria-label="Copy install command">copy</button></div>
-      <div class="install-row"><span class="pr">$</span><code>hamyad init &amp;&amp; hamyad connect</code></div>
+      <div class="install-row"><span class="pr">$</span><code id="install-cmd">npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.2.0/hamyad-0.2.0.tgz</code><button class="copy" data-copy="#install-cmd" type="button" aria-label="Copy install command">copy</button></div>
+      <div class="install-row"><span class="pr">$</span><code>hamyad init --all &amp;&amp; hamyad connect chatgpt</code></div>
     </div>
   </div>
 
-  <div class="hero-art" aria-hidden="true">
-    <div class="drawer-cards" dir="ltr">
-      <div class="icard c1"><span class="k k-decision">DECISION</span><b>Use PostgreSQL, not MySQL</b><small>claude-chat · d-20261009-k3x9</small></div>
-      <div class="icard c2"><span class="k k-task">TASK</span><b>SMS login with Kavenegar</b><small>claude-code · t-20261009-7hqa</small></div>
-      <div class="icard c3"><span class="k k-note">NOTE</span><b>Zarinpal sandbox needs a merchant ID</b><small>claude-desktop · n-20261009-p2mf</small></div>
-    </div>
-    <div class="drawer-front">
-      <div class="label-holder"><span dir="ltr">.brain/</span></div>
-      <div class="handle"></div>
-    </div>
-    <ul class="hero-surfaces">
-      <li><i class="dot d-code"></i>Claude Code</li>
-      <li><i class="dot d-chat"></i>Claude.ai chat</li>
-      <li><i class="dot d-desk"></i>Claude Desktop</li>
-      <li><i class="dot d-gh"></i>GitHub</li>
+  <div class="orbit-wrap" aria-label="AI tools connected to one brain">
+    <svg class="orbit-rings" viewBox="0 0 600 600" aria-hidden="true">
+      <circle cx="300" cy="300" r="262" />
+      <circle cx="300" cy="300" r="190" class="inner" />
+      <g class="spokes" id="spokes"></g>
+    </svg>
+    <ul class="orbit" style="--n:16">
+      <li style="--i:0" class="o-chat" data-src="chatgpt"><span>ChatGPT</span></li>
+      <li style="--i:1" class="o-chat" data-src="claude-chat"><span>Claude.ai</span></li>
+      <li style="--i:2" class="o-agent" data-src="claude-code"><span>Claude Code</span></li>
+      <li style="--i:3" class="o-agent" data-src="codex"><span>Codex</span></li>
+      <li style="--i:4" class="o-ide" data-src="cursor"><span>Cursor</span></li>
+      <li style="--i:5" class="o-agent" data-src="gemini-cli"><span>Gemini CLI</span></li>
+      <li style="--i:6" class="o-chat" data-src="gemini-app"><span>Gemini app</span></li>
+      <li style="--i:7" class="o-chat" data-src="grok"><span>Grok</span></li>
+      <li style="--i:8" class="o-ide" data-src="copilot"><span>Copilot</span></li>
+      <li style="--i:9" class="o-ide" data-src="windsurf"><span>Windsurf</span></li>
+      <li style="--i:10" class="o-chat" data-src="perplexity"><span>Perplexity</span></li>
+      <li style="--i:11" class="o-chat" data-src="claude-desktop"><span>Claude Desktop</span></li>
+      <li style="--i:12" class="o-ide" data-src="zed"><span>Zed</span></li>
+      <li style="--i:13" class="o-ide" data-src="cline"><span>Cline · Roo</span></li>
+      <li style="--i:14" class="o-ide" data-src="jetbrains"><span>JetBrains</span></li>
+      <li style="--i:15" class="o-agent" data-src="aider"><span>aider</span></li>
     </ul>
+    <div class="core" dir="ltr">
+      <div class="label-holder"><span>.brain/</span></div>
+      <p class="core-lines" id="core-ticker"><span>◆ decision · ChatGPT</span><span>± change set · Codex</span><span>💬 session · Cursor</span></p>
+    </div>
   </div>
 </section>
 
 <!-- ============================================================ PROBLEM -->
 <section id="problem" class="problem">
-  <h2 data-t="problem.h">Three islands, zero bridges</h2>
-  <p class="section-lede" data-t="problem.lede">Decide something in a claude.ai chat and Claude Code never hears about it. Let Claude Code learn something in a session and the chat never sees it.</p>
+  <h2 data-t="problem.h">A dozen AIs, a dozen islands</h2>
+  <p class="section-lede" data-t="problem.lede">Decide something in ChatGPT and Codex never hears about it. Change your mind in Claude and Cursor keeps building the old plan. Every tool has its own memory, and none of them talk.</p>
   <div class="islands">
     <article class="island">
-      <header><i class="dot d-code"></i><h3>Claude Code</h3></header>
-      <p data-t="problem.code"><code>CLAUDE.md</code> you write by hand, plus <em>auto memory</em> in <code>~/.claude/projects/…/memory</code>: on <b>this machine only</b>.</p>
+      <header><i class="dot d-chat"></i><h3 data-t="problem.chath">Chat apps</h3></header>
+      <p data-t="problem.chat">ChatGPT memory, Claude Projects, Gemini Gems, Grok and Perplexity threads: each a <b>private memory in someone's cloud</b>, with no way to write back to your repo.</p>
       <span class="torn"></span>
     </article>
     <article class="island">
-      <header><i class="dot d-chat"></i><h3>Claude.ai Projects</h3></header>
-      <p data-t="problem.chat">Project knowledge, custom instructions and a per-project memory, all inside claude.ai. The GitHub integration is <b>read-only</b> and syncs only when you press <i>Sync now</i>.</p>
+      <header><i class="dot d-code"></i><h3 data-t="problem.codeh">Coding agents</h3></header>
+      <p data-t="problem.code">Claude Code, Codex, Cursor, Copilot, Gemini CLI, Windsurf, aider: each keeps its own transcripts on <b>this machine only</b>, and none knows what the others did yesterday.</p>
       <span class="torn"></span>
     </article>
     <article class="island">
-      <header><i class="dot d-desk"></i><h3>Claude Desktop</h3></header>
-      <p data-t="problem.desk">Its own chats and its own local MCP servers. Nothing it learns about your repo goes back <b>into the repo</b>.</p>
+      <header><i class="dot d-gh"></i><h3 data-t="problem.repoh">Your repo</h3></header>
+      <p data-t="problem.repo">The code changes, but the <b>why</b> lives in a chat nobody else can see. When a decision changes, agents keep working on the stale one.</p>
       <span class="torn"></span>
     </article>
   </div>
-  <p class="source-note"><span data-t="problem.src">Sources and the full survey of existing tools:</span> <a href="https://github.com/mrzroot/hamyad/blob/main/RESEARCH.md">RESEARCH.md</a></p>
+  <p class="source-note"><span data-t="problem.src">Sources and the full survey of every tool's hooks, logs and connectors:</span> <a href="https://github.com/mrzroot/hamyad/blob/main/RESEARCH.md">RESEARCH.md</a></p>
 </section>
 
 <!-- ============================================================ DEMO -->
 <section id="demo" class="demo">
   <div class="demo-head">
-    <h2 data-t="demo.h">Run the loop</h2>
-    <p class="section-lede" data-t="demo.lede">This is hamyad's real brain and MCP server, compiled to run in your browser. Nothing is faked except the network: every action below is an actual JSON-RPC call, and every card is the actual Markdown file that would land in your repo.</p>
+    <h2 data-t="demo.h">Five AIs, one brain</h2>
+    <p class="section-lede" data-t="demo.lede">This is hamyad's real brain and MCP server, compiled to run in your browser. Pick any chat app on the left and any coding agent on the right: they all write to the same drawer, and each agent is told what changed since <i>its</i> last session. Nothing is faked except the network.</p>
     <div class="demo-controls">
       <button class="btn btn-stamp" id="play" type="button" data-t="demo.play">▶ Play the whole story</button>
       <button class="btn btn-ghost" id="reset" type="button" data-t="demo.reset">Reset</button>
@@ -114,9 +126,9 @@
   </div>
 
   <div class="desk">
-    <!-- chat -->
-    <section class="station chat" aria-label="Claude.ai chat">
-      <header class="st-head"><i class="dot d-chat"></i><b>claude.ai</b><span class="st-sub" data-t="demo.chatsub">Project chat · hamyad connector</span></header>
+    <section class="station chat" aria-label="Chat app">
+      <header class="st-head"><i class="dot d-chat"></i><b id="chat-name">ChatGPT</b><span class="st-sub" data-t="demo.chatsub">chat · hamyad connector</span></header>
+      <div class="apptabs" id="chat-apps" role="tablist" aria-label="Chat app"></div>
       <div class="chat-log" id="chat-log" aria-live="polite"></div>
       <div class="chips" id="chat-chips"></div>
       <form class="chat-form" id="chat-form">
@@ -128,33 +140,31 @@
       </form>
     </section>
 
-    <!-- brain drawer -->
     <section class="station drawer" aria-label=".brain folder">
       <header class="st-head brass"><b dir="ltr">.brain/</b><span class="st-sub" id="brain-count">0 entries</span></header>
       <div class="cards" id="cards"></div>
       <div class="drawer-lip"></div>
     </section>
 
-    <!-- terminal -->
-    <section class="station term" aria-label="Claude Code terminal">
-      <header class="st-head dark"><i class="dot d-code"></i><b dir="ltr">~/shop $ claude</b><span class="st-sub" data-t="demo.termsub">Claude Code · stdio MCP + hooks</span></header>
+    <section class="station term" aria-label="Coding agent terminal">
+      <header class="st-head dark"><i class="dot d-code"></i><b dir="ltr" id="term-name">~/shop $ claude</b><span class="st-sub" data-t="demo.termsub">hooks + MCP</span></header>
+      <div class="apptabs dark" id="agents" role="tablist" aria-label="Coding agent"></div>
       <pre class="term-out" id="term" aria-live="polite" dir="ltr"></pre>
       <div class="term-btns">
-        <button class="tbtn" id="t-start" type="button"><bdi dir="ltr">claude</bdi> <small data-t="demo.tstart">start session</small></button>
-        <button class="tbtn" id="t-work" type="button"><bdi dir="ltr">&gt; build it</bdi> <small data-t="demo.twork">Claude works</small></button>
-        <button class="tbtn" id="t-exit" type="button"><bdi dir="ltr">/exit</bdi> <small data-t="demo.texit">end session</small></button>
+        <button class="tbtn" id="t-start" type="button"><bdi dir="ltr">start</bdi> <small data-t="demo.tstart">session start hook</small></button>
+        <button class="tbtn" id="t-work" type="button"><bdi dir="ltr">&gt; build it</bdi> <small data-t="demo.twork">agent edits code</small></button>
+        <button class="tbtn" id="t-exit" type="button"><bdi dir="ltr">exit</bdi> <small data-t="demo.texit">session end hook</small></button>
       </div>
     </section>
 
-    <!-- github -->
-    <section class="station gh-log" aria-label="GitHub commits">
-      <header class="st-head"><i class="dot d-gh"></i><b dir="ltr">github.com/you/shop</b><span class="st-sub" data-t="demo.ghsub">main · commits touching .brain/</span></header>
-      <ol class="commits" id="commits" dir="ltr"></ol>
+    <section class="station timeline" aria-label="Timeline">
+      <header class="st-head"><b dir="ltr">hamyad timeline</b><span class="st-sub" data-t="demo.tlsub">every tool's chats, decisions and code changes, newest first</span></header>
+      <ol class="tl" id="timeline" dir="ltr"></ol>
     </section>
   </div>
 
   <div class="wire" id="wire" hidden>
-    <header><b data-t="demo.wireh">JSON-RPC wire</b><span class="st-sub" data-t="demo.wiresub">exactly what Claude and hamyad say to each other</span></header>
+    <header><b data-t="demo.wireh">JSON-RPC wire</b><span class="st-sub" data-t="demo.wiresub">exactly what each AI and hamyad say to each other</span></header>
     <pre id="wire-log" dir="ltr"></pre>
   </div>
 
@@ -165,80 +175,111 @@
   </dialog>
 </section>
 
+<!-- ============================================================ CONNECT -->
+<section id="connect" class="connect">
+  <h2 data-t="conn.h">Connect any AI</h2>
+  <p class="section-lede" data-t="conn.lede"><code>hamyad init --all</code> wires every coding tool in your repo. <code>hamyad connect &lt;tool&gt;</code> prints the exact steps for the rest. Anything else can use MCP, the REST/OpenAPI endpoint, or the always-fresh <code>MEMORY.md</code>.</p>
+  <div class="conn-grid" id="conn-grid" dir="ltr"></div>
+  <div class="conn-foot">
+    <div>
+      <h3 data-t="conn.remoteh">Chat apps need a public URL</h3>
+      <p data-t="conn.remote">They call connectors from their own cloud. Use the free Cloudflare Worker over your GitHub repo, or with no GitHub at all run <code>hamyad serve --token …</code> next to your shared folder and expose it with <code>cloudflared tunnel</code>.</p>
+    </div>
+    <div>
+      <h3 data-t="conn.nogh">No GitHub? One file is enough</h3>
+      <p data-t="conn.noghp"><code>hamyad init --all --store ~/Dropbox/shop/MEMORY.md</code> keeps the whole brain in one Markdown file in Dropbox, Google Drive or a cowork folder. Upload that same file to any chat that only takes files.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ============================================================ HOW -->
 <section id="how" class="how">
   <h2 data-t="how.h">How it works</h2>
   <ol class="steps">
     <li>
       <span class="num">1</span>
-      <h3 data-t="how.1h">Any Claude writes</h3>
-      <p data-t="how.1p">The same seven MCP tools everywhere: <code>brain_remember</code>, <code>brain_search</code>, <code>brain_update</code>, <code>brain_context</code>… Claude.ai reaches them through a remote connector, Claude Code and Desktop through stdio.</p>
+      <h3 data-t="how.1h">Every AI writes</h3>
+      <p data-t="how.1p">Chat apps call <code>brain_remember</code> through a connector or GPT Action. Coding agents are captured by hooks: each session's prompts, outcome and <b>git diff</b> become entries, attributed to the tool.</p>
     </li>
     <li>
       <span class="num">2</span>
-      <h3 data-t="how.2h">Git stores</h3>
-      <p data-t="how.2p">One Markdown file per entry under <code>.brain/</code>. From chat, each write is a commit made through the GitHub API by a tiny Cloudflare Worker. Unique file names mean two writers never conflict.</p>
+      <h3 data-t="how.2h">One folder stores</h3>
+      <p data-t="how.2p">Plain Markdown in <code>.brain/</code>: in your repo (GitHub is the source of truth), in any synced folder, or in a single <code>MEMORY.md</code>. Secrets are redacted before anything is written.</p>
     </li>
     <li>
       <span class="num">3</span>
-      <h3 data-t="how.3h">Claude Code pulls</h3>
-      <p data-t="how.3p">A <code>SessionStart</code> hook fast-forwards the repo, refreshes a generated block in <code>CLAUDE.md</code> and tells Claude exactly what changed in chat since its last session.</p>
+      <h3 data-t="how.3h">Decisions supersede</h3>
+      <p data-t="how.3p">When a new decision replaces an old one, the old one is marked <i>superseded</i> everywhere. hamyad flags likely conflicts instead of guessing.</p>
     </li>
     <li>
       <span class="num">4</span>
-      <h3 data-t="how.4h">Sessions hand off</h3>
-      <p data-t="how.4p">A <code>SessionEnd</code> hook turns the transcript into a short summary (prompts, files, commits, outcome) without any LLM call, commits it and pushes it, so the chat side picks up where the CLI stopped.</p>
+      <h3 data-t="how.4h">Every AI catches up</h3>
+      <p data-t="how.4p">At session start each agent reads the brief plus <b>“⚠ DECISIONS CHANGED since your last session”</b> and what the other tools did. Chat apps get the same through <code>brain_context</code>.</p>
     </li>
   </ol>
 
   <figure class="arch" dir="ltr">
 <pre>
- claude.ai chat / mobile ──remote MCP──▶ Cloudflare Worker ──GitHub API──┐
- Claude Desktop ─────────stdio MCP───▶ hamyad mcp ────────┐             ▼
- Claude Code ────stdio MCP + hooks───▶ hamyad mcp ──▶ .brain/*.md ◀─ git ─▶ GitHub
+ ChatGPT · Claude.ai · Grok · Perplexity · Gemini app ──remote MCP / GPT Action / REST──┐
+                                                                                         ▼
+ Claude Code · Codex · Cursor · Copilot · Gemini CLI · Windsurf ──hooks + MCP──▶  .brain/  ◀── git · Dropbox · Drive · one MEMORY.md
+ Zed · Cline/Roo · JetBrains · Claude Desktop ──────────────────────MCP──────▶   decisions · tasks · notes · sessions · changes
+ aider ───────────────────────────────────AGENTS.md + chat import on commit──▶   → CLAUDE.md / AGENTS.md / MEMORY.md regenerated
 </pre>
   </figure>
+
+  <div class="table-wrap triggers">
+  <table>
+    <thead><tr><th data-t="trg.h1">When</th><th data-t="trg.h2">What hamyad does</th></tr></thead>
+    <tbody>
+      <tr><th data-t="trg.1">Session start</th><td data-t="trg.1d">pull, refresh CLAUDE.md / AGENTS.md / MEMORY.md, inject brief + “decisions changed”</td></tr>
+      <tr><th data-t="trg.2">Every prompt</th><td data-t="trg.2d">record it (redacted); warn if another tool changed a decision meanwhile</td></tr>
+      <tr><th data-t="trg.3">Turn / session end</th><td data-t="trg.3d">session summary + git diff, commit, push in the background</td></tr>
+      <tr><th data-t="trg.4">MCP / REST write</th><td data-t="trg.4d">entry saved, MEMORY.md and instruction files regenerated</td></tr>
+      <tr><th data-t="trg.5">git commit · timer</th><td data-t="trg.5d">import aider chats; <code>hamyad watch</code> imports local chat logs and syncs on a schedule</td></tr>
+    </tbody>
+  </table>
+  </div>
 </section>
 
 <!-- ============================================================ SETUP -->
 <section id="setup" class="setup">
   <h2 data-t="setup.h">Set it up in ten minutes</h2>
   <div class="tabs" role="tablist">
-    <button role="tab" aria-selected="true" data-tab="t-code">Claude Code</button>
-    <button role="tab" aria-selected="false" data-tab="t-chat">Claude.ai chat</button>
-    <button role="tab" aria-selected="false" data-tab="t-desk">Claude Desktop</button>
+    <button role="tab" aria-selected="true" data-tab="t-code" data-t="setup.tab1">Coding agents</button>
+    <button role="tab" aria-selected="false" data-tab="t-chat" data-t="setup.tab2">Chat apps</button>
+    <button role="tab" aria-selected="false" data-tab="t-nogh" data-t="setup.tab3">No GitHub</button>
   </div>
   <div class="tabpanel" id="t-code" role="tabpanel">
-    <p data-t="setup.code">Inside your repo. <code>init</code> creates <code>.brain/</code>, registers the MCP server in <code>.mcp.json</code>, merges two hooks into <code>.claude/settings.json</code> and adds a generated block to <code>CLAUDE.md</code>, without touching anything that is already there.</p>
-<pre dir="ltr"><code>npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.1.0/hamyad-0.1.0.tgz
+    <p data-t="setup.code">Inside your repo. <code>init --all</code> creates <code>.brain/</code> and merges MCP servers, hooks and rules for Claude Code, Codex, Gemini CLI, Cursor, Copilot, Windsurf, Zed, Roo, Junie and aider, without touching anything already there.</p>
+<pre dir="ltr"><code>npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.2.0/hamyad-0.2.0.tgz
 cd my-project
-hamyad init
-git add .brain .mcp.json .claude/settings.json CLAUDE.md
-git commit -m "Add hamyad brain" &amp;&amp; git push
-hamyad absorb    # optional: copy Claude Code's local auto memory into the shared brain</code></pre>
+hamyad init --all
+git add -A &amp;&amp; git commit -m "Add hamyad brain" &amp;&amp; git push
+hamyad import      # past chats from Claude Code, Codex, Gemini, Copilot, Cursor, Windsurf, aider
+hamyad status      # which tools are wired, last session of each</code></pre>
   </div>
   <div class="tabpanel" id="t-chat" role="tabpanel" hidden>
-    <p data-t="setup.chat">claude.ai calls connectors from Anthropic's cloud, so the server must be public. The free Workers plan is enough, and because Anthropic makes the call, a local block on <code>workers.dev</code> does not matter.</p>
-<pre dir="ltr"><code>git clone https://github.com/mrzroot/hamyad &amp;&amp; cd hamyad &amp;&amp; npm ci &amp;&amp; npm run build
-cd worker                       # set GITHUB_REPO in wrangler.toml
-npx wrangler deploy
-npx wrangler secret put GITHUB_TOKEN   # fine-grained, one repo, Contents: read/write
-npx wrangler secret put HAMYAD_TOKEN   # long random string
+    <p data-t="setup.chat">Deploy the free Worker once, then add the same URL to each chat app. ChatGPT can also use it as a Custom GPT Action.</p>
+<pre dir="ltr"><code>cd hamyad/worker &amp;&amp; npx wrangler deploy
+npx wrangler secret put GITHUB_TOKEN    # fine-grained, one repo, Contents: read/write
+npx wrangler secret put HAMYAD_TOKEN    # long random string
 
-# claude.ai → Customize → Connectors → Add custom connector
-#   https://hamyad.&lt;you&gt;.workers.dev/mcp/&lt;HAMYAD_TOKEN&gt;   (No sign in)
-# then paste the output of `hamyad connect` into the Project's custom instructions</code></pre>
+ChatGPT     Developer mode → Add custom MCP server   URL/mcp/&lt;TOKEN&gt;?source=chatgpt
+            or GPT → Actions → Import from URL       URL/openapi.json  (API key: Bearer &lt;TOKEN&gt;)
+Claude.ai   Connectors → Add custom connector        URL/mcp/&lt;TOKEN&gt;?source=claude-chat
+Grok        grok.com/connectors → Custom             URL/mcp/&lt;TOKEN&gt;?source=grok
+Perplexity  Connectors → Custom → Remote             URL/mcp/&lt;TOKEN&gt;?source=perplexity
+Gemini app  Connected Apps → Add a custom app        URL/mcp/&lt;TOKEN&gt;?source=gemini-app  (or upload MEMORY.md)
+
+hamyad connect instructions   # paste into the Project / GPT / Gem / Space instructions</code></pre>
   </div>
-  <div class="tabpanel" id="t-desk" role="tabpanel" hidden>
-    <p data-t="setup.desk">Claude Desktop runs the same local server against the same files. Settings → Developer → Edit Config:</p>
-<pre dir="ltr"><code>{
-  "mcpServers": {
-    "hamyad": {
-      "command": "hamyad",
-      "args": ["mcp", "--dir", "/path/to/my-project", "--source", "claude-desktop"]
-    }
-  }
-}</code></pre>
+  <div class="tabpanel" id="t-nogh" role="tabpanel" hidden>
+    <p data-t="setup.nogh">The brain can live in any folder your machines and tools share, or in one file. Serve it to chat apps through a tunnel.</p>
+<pre dir="ltr"><code>hamyad init --all --store ~/Dropbox/brains/shop/MEMORY.md
+hamyad serve --host 0.0.0.0 --token "$HAMYAD_TOKEN"
+cloudflared tunnel --url http://localhost:8787
+hamyad watch --interval 300    # timer: import local chats, refresh MEMORY.md</code></pre>
   </div>
 </section>
 
@@ -246,9 +287,9 @@ npx wrangler secret put HAMYAD_TOKEN   # long random string
 <section class="promises">
   <h2 data-t="prom.h">Things hamyad will never do</h2>
   <ul>
-    <li data-t="prom.1">Rewrite your history. Pulls are fast-forward only.</li>
+    <li data-t="prom.1">Store your API keys. Secrets are redacted from chats, prompts and diffs before anything is written.</li>
     <li data-t="prom.2">Push your work in progress. It pushes only when every unpushed commit is a <code>brain:</code> commit.</li>
-    <li data-t="prom.3">Commit your own edits to <code>CLAUDE.md</code>. Only its generated block is ever committed.</li>
+    <li data-t="prom.3">Capture full transcripts unless you opt in. The default is a short summary.</li>
     <li data-t="prom.4">Run a public server without a token. Workers and <code>hamyad serve</code> refuse to.</li>
     <li data-t="prom.5">Lock you in. It is a folder of Markdown. Delete hamyad and the notes stay.</li>
   </ul>
@@ -259,26 +300,28 @@ npx wrangler secret put HAMYAD_TOKEN   # long random string
   <h2 data-t="cmp.h">Next to what already exists</h2>
   <div class="table-wrap">
   <table>
-    <thead><tr><th></th><th>Claude Projects + GitHub</th><th>basic-memory</th><th>mcp-memory-service</th><th>Mem0 MCP</th><th class="us">hamyad</th></tr></thead>
+    <thead><tr><th></th><th>Built-in memories</th><th>basic-memory</th><th>mcp-memory-service</th><th>Mem0 MCP</th><th class="us">hamyad</th></tr></thead>
     <tbody>
-      <tr><th data-t="cmp.r1">Chat writes back</th><td>✗ <small>read-only, manual sync</small></td><td>~ <small>paid cloud</small></td><td>✓ <small>self-host</small></td><td>✓ <small>hosted</small></td><td class="us">✓ <small>as git commits</small></td></tr>
-      <tr><th data-t="cmp.r2">Lives in your repo, reviewable in PRs</th><td>–</td><td>✗</td><td>✗ <small>DB</small></td><td>✗</td><td class="us">✓</td></tr>
-      <tr><th data-t="cmp.r3">Claude Code hooks + CLAUDE.md</th><td>✗</td><td>✗</td><td>~</td><td>✗</td><td class="us">✓</td></tr>
+      <tr><th data-t="cmp.r0">Works across vendors</th><td>✗ <small>one app each</small></td><td>✓ <small>MCP clients</small></td><td>✓ <small>MCP clients</small></td><td>✓ <small>MCP clients</small></td><td class="us">✓ <small>MCP, GPT Action, REST, MEMORY.md</small></td></tr>
+      <tr><th data-t="cmp.r1">Captures agent sessions + code diffs</th><td>✗</td><td>✗</td><td>~ <small>own hooks</small></td><td>✗</td><td class="us">✓ <small>hooks for 6 agents + importers</small></td></tr>
+      <tr><th data-t="cmp.r6">Superseded decisions flagged to every tool</th><td>✗</td><td>✗</td><td>✗</td><td>~</td><td class="us">✓</td></tr>
+      <tr><th data-t="cmp.r2">Lives in your repo or folder</th><td>✗</td><td>~ <small>notes dir</small></td><td>✗ <small>DB</small></td><td>✗</td><td class="us">✓</td></tr>
       <tr><th data-t="cmp.r4">Semantic search</th><td>–</td><td>✓</td><td>✓</td><td>✓</td><td class="us">✗ <small>keyword, Persian-aware</small></td></tr>
       <tr><th data-t="cmp.r5">License</th><td>–</td><td>AGPL-3.0</td><td>Apache-2.0</td><td>Apache-2.0</td><td class="us">MIT</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="source-note" data-t="cmp.note">hamyad cannot read or write claude.ai's built-in project memory or instructions: there is no API for them. It sits beside them as the shared, durable layer.</p>
+  <p class="source-note" data-t="cmp.note">hamyad cannot read the built-in memories of ChatGPT or Claude (there is no API). Chat apps write to hamyad because the connector and your instructions ask them to.</p>
 </section>
 
 <!-- ============================================================ FAQ -->
 <section class="faq">
   <h2 data-t="faq.h">Questions</h2>
-  <details><summary data-t="faq.q1">Does it need an Anthropic or OpenAI API key?</summary><p data-t="faq.a1">No. Claude does the thinking in whichever app you use; hamyad only stores and serves. Session summaries are built from the transcript without any model call.</p></details>
-  <details><summary data-t="faq.q2">I am in Iran. Will the connector work?</summary><p data-t="faq.a2">Yes. claude.ai connects to your Worker from Anthropic's servers, not from your device, so domestic filtering of <code>workers.dev</code> does not affect it. You may need open internet once to deploy.</p></details>
-  <details><summary data-t="faq.q3">What about teams?</summary><p data-t="faq.a3">Everyone with repo access shares the brain through git. For the chat connector, v0.1 uses one shared token per deployment; OAuth per person is on the roadmap.</p></details>
-  <details><summary data-t="faq.q4">Can I edit entries by hand?</summary><p data-t="faq.a4">Yes, in your editor or on github.com. A file without frontmatter works too: its first heading becomes the title.</p></details>
+  <details><summary data-t="faq.q1">Does it need an OpenAI or Anthropic API key?</summary><p data-t="faq.a1">No. The thinking happens in whichever AI you already use; hamyad only stores, summarises (without any model call) and serves.</p></details>
+  <details><summary data-t="faq.q5">Which tools are really tested?</summary><p data-t="faq.a5">Claude Code, Codex, Gemini CLI, Copilot CLI and aider run for real against a mock model server in our e2e suite: hooks fire, sessions and diffs are captured, and “decisions changed” reaches each model. Cursor, Windsurf, Zed, Roo and JetBrains configs are verified by parsing; chat-app connectors need your account.</p></details>
+  <details><summary data-t="faq.q2">I am in Iran. Will the connectors work?</summary><p data-t="faq.a2">Yes. ChatGPT, Claude.ai and Grok connect to your Worker from their servers, not from your device, so domestic filtering of <code>workers.dev</code> does not affect them. You may need open internet once to deploy.</p></details>
+  <details><summary data-t="faq.q3">What about teams?</summary><p data-t="faq.a3">Everyone with repo (or folder) access shares the brain. The remote endpoint uses one token per deployment; OAuth per person is on the roadmap.</p></details>
+  <details><summary data-t="faq.q4">Can I edit entries by hand?</summary><p data-t="faq.a4">Yes, in your editor, on github.com, or right inside MEMORY.md.</p></details>
 </section>
 </main>
 
@@ -286,7 +329,7 @@ npx wrangler secret put HAMYAD_TOKEN   # long random string
   <div>
     <b>hamyad</b> <span lang="fa">هم‌یاد</span> · MIT · <a href="https://github.com/mrzroot/hamyad">GitHub</a> · <a href="https://github.com/mrzroot/hamyad/releases">Releases</a> · <a href="https://github.com/mrzroot/hamyad/blob/main/RESEARCH.md">Research</a>
   </div>
-  <div data-t="foot.by">Built by <a href="https://mrzroot.github.io/">Mohammadreza Zare (M-R-Z)</a>. Not affiliated with Anthropic.</div>
+  <div data-t="foot.by">Built by <a href="https://mrzroot.github.io/">Mohammadreza Zare (M-R-Z)</a>. Not affiliated with OpenAI, Anthropic, Google, xAI or any tool listed.</div>
 </footer>
 
 <script src="assets/hamyad-core.js"></script>

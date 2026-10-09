@@ -23,6 +23,8 @@ export class FsBackend implements Backend {
       }
       for (const it of items) {
         if (it.name.startsWith(".")) continue;
+        // full transcripts can be large and are not entries
+        if (!rel && it.name === "transcripts") continue;
         const r = rel ? `${rel}/${it.name}` : it.name;
         if (it.isDirectory()) await walk(r);
         else if (/\.(md|json)$/.test(it.name)) out.push({ path: r, content: await fs.readFile(path.join(this.dir, r), "utf8") });
