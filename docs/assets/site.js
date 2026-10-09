@@ -229,7 +229,7 @@
     if (item.ask) {
       bubble("tool", "<b>brain_context</b> {}");
       return tool(chatSrv, "claude.ai", "brain_context", {}).then(function (txt) {
-        bubble("msg claude", esc(S[lang].ask) + '<pre style="white-space:pre-wrap;font:12px/1.45 var(--mono);margin:6px 0 0" dir="auto">' + esc(txt) + "</pre>");
+        bubble("msg claude", esc(S[lang].ask) + '<pre class="brief-pre">' + esc(txt) + "</pre>");
       });
     }
     var args = { kind: item.kind, title: item.title };
