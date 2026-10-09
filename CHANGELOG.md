@@ -11,4 +11,4 @@ First release.
 - Claude Code hooks: SessionStart (fast-forward pull, regenerate CLAUDE.md block, inject what changed on the chat side) and SessionEnd (LLM-free session summary from the transcript, commit, safe push).
 - CLI: `init`, `status`, `sync`, `add`, `list`, `search`, `show`, `done`, `update`, `context`, `absorb`, `connect`, `mcp`, `serve`, `hook`.
 - Persian-aware search (Arabic/Persian letters, ZWNJ, digits).
-- 37 tests, including interop with the official MCP TypeScript SDK client over stdio and Streamable HTTP.
+- 36 tests, including interop with the official MCP TypeScript SDK client over stdio and Streamable HTTP.

@@ -81,7 +81,7 @@ npx wrangler secret put HAMYAD_TOKEN    # یک رشته‌ی تصادفی بلن
 ## توسعه
 
 ```bash
-npm ci && npm test   # ۳۷ تست: واحد، چرخه‌ی کامل گیت با ریموت bare، سازگاری با کلاینت رسمی MCP SDK (stdio و HTTP)، Worker
+npm ci && npm test   # ۳۶ تست: واحد، چرخه‌ی کامل گیت با ریموت bare، سازگاری با کلاینت رسمی MCP SDK (stdio و HTTP)، Worker
 ```
 
 مجوز MIT © [محمدرضا زارع (M-R-Z)](https://github.com/mrzroot)

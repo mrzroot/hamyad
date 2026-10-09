@@ -3,7 +3,7 @@
 ```bash
 git clone https://github.com/mrzroot/hamyad && cd hamyad
 npm ci
-npm test            # build + 37 tests (unit, git loop, MCP SDK interop)
+npm test            # build + 36 tests (unit, git loop, MCP SDK interop)
 npm run bundle:worker
 ```
 

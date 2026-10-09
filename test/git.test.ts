@@ -52,7 +52,7 @@ test("laptop <-> GitHub <-> chat-side commits: sync, hooks, safe push", () => {
     assert.match(ctx, /Use Zarinpal for payments/);
     assert.match(ctx, /\[claude-chat\]/);
     assert.match(ctx, /fast-forwarded/);
-    const md = readFileSync(path.join(a, "CLAUDE.md"), "utf8");
+    const md = readFileSync(path.join(a, "CLAUDE.md"), "utf8").replace(/\r\n/g, "\n");
     assert.ok(md.startsWith("# Project rules\n\nAlways run tests.\n"), "user content kept");
     assert.match(md, /Use Zarinpal for payments/);
 

@@ -175,7 +175,7 @@ hamyad mcp | serve | hook session-start|session-end
 ## Develop
 
 ```bash
-npm ci && npm test          # 37 tests: unit, git round trip with a bare remote, MCP SDK interop (stdio + HTTP), Worker
+npm ci && npm test          # 36 tests: unit, git round trip with a bare remote, MCP SDK interop (stdio + HTTP), Worker
 npm run bundle:worker       # proves the Worker bundle has no Node built-ins
 ```
 
