@@ -1,0 +1,14 @@
+# Cloudflare Workers deployment of the hamyad remote MCP server (free tier is enough).
+#   npx wrangler deploy
+#   npx wrangler secret put GITHUB_TOKEN   # fine-grained PAT, Contents: Read and write, only this repo
+#   npx wrangler secret put HAMYAD_TOKEN   # long random string; used in the connector URL or header
+name = "hamyad"
+main = "../dist/src/worker.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+GITHUB_REPO = "OWNER/REPO"
+GITHUB_BRANCH = "main"
+BRAIN_DIR = ".brain"
+HAMYAD_SOURCE = "claude-chat"

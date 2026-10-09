@@ -1,0 +1,60 @@
+{
+  "name": "hamyad",
+  "version": "0.1.0",
+  "description": "One shared project brain for Claude Code, Claude.ai chat, Claude Desktop and GitHub. Git-backed MCP memory (.brain/) with stdio + remote HTTP (Cloudflare Workers) transports, Claude Code hooks and a sync CLI.",
+  "license": "MIT",
+  "author": "Mohammadreza Zare (M-R-Z) <https://github.com/mrzroot>",
+  "homepage": "https://mrzroot.github.io/hamyad/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrzroot/hamyad.git"
+  },
+  "bugs": "https://github.com/mrzroot/hamyad/issues",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "claude-code",
+    "claude-desktop",
+    "memory",
+    "memory-bank",
+    "second-brain",
+    "cloudflare-workers",
+    "github",
+    "persian"
+  ],
+  "type": "module",
+  "bin": {
+    "hamyad": "dist/src/cli.js"
+  },
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": "./dist/src/index.js",
+    "./worker": "./dist/src/worker.js"
+  },
+  "files": [
+    "dist/src",
+    "worker/wrangler.toml",
+    "worker/README.md",
+    "README.md",
+    "README.fa.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test --test-concurrency=1 dist/test/",
+    "bundle:worker": "esbuild src/worker.ts --bundle --format=esm --platform=browser --target=es2022 --outfile=build/worker.js",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@types/node": "^20.19.43",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.3"
+  }
+}
