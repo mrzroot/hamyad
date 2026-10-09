@@ -34,7 +34,8 @@ echo "installed hamyad $V"
 ( cd "$T/proj" && env -i HOME="$T/home" PATH="$T/home/.local/bin:$T/bin" sh -c 'hamyad add decision "Installer works" >/dev/null && hamyad context | grep -q "Installer works"' )
 
 echo "== 2. re-run is idempotent and reuses the portable Node"
-( cd "$T/proj" && cat "$ROOT/docs/install.sh" | env -i HOME="$T/home" PATH="$T/bin" HAMYAD_YES=1 HAMYAD_TARBALL="$TGZ" sh ) | grep -q "Using portable Node.js"
+( cd "$T/proj" && cat "$ROOT/docs/install.sh" | env -i HOME="$T/home" PATH="$T/bin" HAMYAD_YES=1 HAMYAD_TARBALL="$TGZ" sh ) > "$T/r2.log" 2>&1
+grep -q "Using portable Node.js" "$T/r2.log" || { cat "$T/r2.log"; exit 1; }
 
 echo "== 3. interactive through a pseudo-terminal (questions read from /dev/tty)"
 ( cd "$T/proj2" && git init -q )
@@ -47,6 +48,7 @@ test -f "$T/proj2/.brain/config.json"
 test -f "$T/proj2/.claude/settings.local.json" || true
 
 echo "== 4. running from \$HOME without a project only installs"
-( cd "$T/home" && cat "$ROOT/docs/install.sh" | env -i HOME="$T/home" PATH="$T/bin" HAMYAD_YES=1 HAMYAD_TARBALL="$TGZ" sh ) | grep -q "cd into a project"
+( cd "$T/home" && cat "$ROOT/docs/install.sh" | env -i HOME="$T/home" PATH="$T/bin" HAMYAD_YES=1 HAMYAD_TARBALL="$TGZ" sh ) > "$T/r4.log" 2>&1
+grep -q "cd into a project" "$T/r4.log" || { cat "$T/r4.log"; exit 1; }
 test ! -d "$T/home/.brain"
 echo "installer e2e: all good"

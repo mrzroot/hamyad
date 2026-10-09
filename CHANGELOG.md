@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.1 (2026-10-09)
+
+**One-line install + setup wizard**
+- `curl -fsSL https://mrzroot.github.io/hamyad/install.sh | sh` (macOS/Linux) and `irm https://mrzroot.github.io/hamyad/install.ps1 | iex` (Windows): uses Node.js 20+ if present, otherwise a checksum-verified portable Node 24 LTS under `~/.hamyad`; installs the latest release, puts `hamyad` on PATH, asks which project to set up and runs the wizard. Works from a pipe (questions go to the terminal); `HAMYAD_YES=1` for unattended installs.
+- `hamyad setup` (alias `hamyad tunnel`): init if needed, pre-approve hamyad in Claude Code (`settings.local.json` + project trust), Codex (trusted project), Gemini CLI (trusted folder) and the Cursor CLI, then choose how chat apps reach the brain: free Cloudflare quick tunnel (no account; cloudflared fetched if missing), `--worker` (deploys your own Cloudflare Worker via wrangler and sets its secrets), `--url` (your own), or `--no-chat`. Prints connector URLs with direct links for claude.ai (pre-filled), ChatGPT, Grok, Perplexity and Gemini; `--open` opens them. The access token lives in `.git/hamyad/remote.json`, never in the repo.
+- Every release also ships `hamyad.tgz`, so `releases/latest/download/hamyad.tgz` always points at the newest build.
+
+**Site**
+- One-click copy install button (auto-detects Windows vs macOS/Linux) and an animated EN/فارسی step-by-step tutorial for Claude.ai, ChatGPT and Cursor.
+
+**CI**
+- Installer end-to-end on Ubuntu and macOS (clean PATH without Node, pseudo-terminal answers, re-run, home-directory guard), Windows PowerShell 5.1 and 7, a real Cloudflare quick tunnel smoke test, and `setup --worker` against a real `wrangler deploy --dry-run`.
+
 ## 0.2.0 (2026-10-09)
 
 hamyad is now one shared brain for **every** AI tool, not just Claude.

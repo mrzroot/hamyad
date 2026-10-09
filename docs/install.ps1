@@ -29,7 +29,7 @@ function NodeOk($exe) {
   try { $v = & $exe -p 'process.versions.node.split(".")[0]'; return [int]$v -ge 20 } catch { return $false }
 }
 
-Write-Host 'hamyad' -NoNewline -ForegroundColor White; Write-Host ' · one shared brain for every AI tool · https://mrzroot.github.io/hamyad/' -ForegroundColor DarkGray
+Write-Host 'hamyad' -NoNewline -ForegroundColor White; Write-Host ' - one shared brain for every AI tool - https://mrzroot.github.io/hamyad/' -ForegroundColor DarkGray
 
 # ------------------------------------------------------------------ 1. Node.js
 $Node = $null
@@ -82,7 +82,7 @@ New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
 Set-Content -Encoding ASCII -Path (Join-Path $BinDir 'hamyad.cmd') -Value "@echo off`r`n`"$Node`" `"$Js`" %*"
 Set-Content -Encoding UTF8 -Path (Join-Path $BinDir 'hamyad.ps1') -Value "& `"$Node`" `"$Js`" @args`r`nexit `$LASTEXITCODE"
 $Hamyad = Join-Path $BinDir 'hamyad.cmd'
-Write-Host "  ✓ hamyad $(& $Hamyad --version) → $Hamyad" -ForegroundColor Green
+Write-Host "  OK hamyad $(& $Hamyad --version) -> $Hamyad" -ForegroundColor Green
 
 $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
 if (-not (($userPath -split ';') -contains $BinDir)) {

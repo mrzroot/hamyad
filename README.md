@@ -88,8 +88,23 @@ Paste `hamyad connect instructions` into the Project / GPT / Gem / Space instruc
 
 ## Quick start
 
+**One line** (installs Node.js too if you don't have it, then sets up the project you're in and walks you through connecting chat apps):
+
 ```bash
-npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.2.0/hamyad-0.2.0.tgz
+curl -fsSL https://mrzroot.github.io/hamyad/install.sh | sh                 # macOS / Linux
+```
+```powershell
+irm https://mrzroot.github.io/hamyad/install.ps1 | iex                       # Windows PowerShell
+```
+
+`hamyad setup` is the wizard behind it; run it again any time. It pre-approves hamyad in Claude Code, Codex, Gemini CLI and the Cursor CLI, then gives chat apps a public URL: a free Cloudflare quick tunnel (no account), your own Cloudflare Worker (`hamyad setup --worker`, one browser login), or a URL you already have (`--url`). It prints ready-to-paste connector URLs plus direct links for claude.ai, ChatGPT, Grok, Perplexity and Gemini, and can open them. Step-by-step pictures: [the tutorial on the site](https://mrzroot.github.io/hamyad/#tutorial).
+
+Installer options (env): `HAMYAD_YES=1` (no questions), `HAMYAD_DIR=path`, `HAMYAD_NO_SETUP=1`, `HAMYAD_VERSION=0.2.1`, `HAMYAD_NODE=portable`.
+
+**Manual:**
+
+```bash
+npm i -g https://github.com/mrzroot/hamyad/releases/latest/download/hamyad.tgz
 
 cd my-project
 hamyad init --all            # .brain/ + MCP configs + hooks for Claude Code, Codex, Gemini CLI, Cursor, Copilot,

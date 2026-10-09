@@ -130,7 +130,8 @@ if [ "${HAMYAD_NO_SETUP:-0}" = "1" ]; then
   say ""; say "Done. In any project run:  ${B}hamyad setup${N}"; exit 0
 fi
 DIR="${HAMYAD_DIR:-$PWD}"
-if [ "$DIR" = "$HOME" ] || [ "$DIR" = "/" ]; then
+phys() { (cd "$1" 2>/dev/null && pwd -P) || printf '%s' "$1"; }
+if [ "$(phys "$DIR")" = "$(phys "$HOME")" ] || [ "$(phys "$DIR")" = "/" ]; then
   if [ "$YES" = "1" ] || [ -z "$TTY" ]; then
     say ""; say "Installed. You are in $DIR, not a project: cd into a project and run  ${B}hamyad setup${N}"; exit 0
   fi

@@ -14,7 +14,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"hamyad","applicationCategory":"DeveloperApplication","operatingSystem":"Linux, macOS, Windows, Cloudflare Workers","license":"https://opensource.org/licenses/MIT","url":"https://mrzroot.github.io/hamyad/","codeRepository":"https://github.com/mrzroot/hamyad","softwareVersion":"0.2.0","author":{"@type":"Person","name":"Mohammadreza Zare","url":"https://mrzroot.github.io/"},"offers":{"@type":"Offer","price":"0"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"hamyad","applicationCategory":"DeveloperApplication","operatingSystem":"Linux, macOS, Windows, Cloudflare Workers","license":"https://opensource.org/licenses/MIT","url":"https://mrzroot.github.io/hamyad/","codeRepository":"https://github.com/mrzroot/hamyad","softwareVersion":"0.2.1","author":{"@type":"Person","name":"Mohammadreza Zare","url":"https://mrzroot.github.io/"},"offers":{"@type":"Offer","price":"0"}}</script>
 </head>
 <body>
 <a class="skip" href="#demo" data-t="skip">Skip to the live demo</a>
@@ -26,6 +26,7 @@
   </a>
   <nav aria-label="Sections">
     <a href="#demo" data-t="nav.demo">Live demo</a>
+    <a href="#tutorial" data-t="nav.tut">Tutorial</a>
     <a href="#connect" data-t="nav.connect">Connect any AI</a>
     <a href="#how" data-t="nav.how">How it works</a>
     <a href="#setup" data-t="nav.setup">Setup</a>
@@ -45,16 +46,22 @@
 <!-- ============================================================ HERO -->
 <section class="hero">
   <div class="hero-copy">
-    <p class="kicker"><span class="stamp-s">v0.2.0</span> <span data-t="hero.kicker">MIT · MCP + REST · zero runtime dependencies</span></p>
+    <p class="kicker"><span class="stamp-s">v0.2.1</span> <span data-t="hero.kicker">MIT · MCP + REST · zero runtime dependencies</span></p>
     <h1 data-t="hero.h1">One project.<br>One brain.<br><em>Every AI.</em></h1>
     <p class="lede" data-t="hero.lede">You plan in ChatGPT, argue architecture with Claude, ask Grok and Perplexity, and let Codex, Claude Code, Cursor, Copilot and Gemini write the code. Each one remembers alone. <b>hamyad</b> gives all of them <b>one shared brain</b>: every chat, decision and code change, attributed to the tool that made it, and visible to all the others the next time they start.</p>
     <div class="cta">
       <a class="btn btn-ink" href="#demo" data-t="hero.cta1">Watch five AIs share one brain</a>
       <a class="btn btn-ghost" href="#connect" data-t="hero.cta2">Connect your AI</a>
     </div>
-    <div class="install" dir="ltr">
-      <div class="install-row"><span class="pr">$</span><code id="install-cmd">npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.2.0/hamyad-0.2.0.tgz</code><button class="copy" data-copy="#install-cmd" type="button" aria-label="Copy install command">copy</button></div>
-      <div class="install-row"><span class="pr">$</span><code>hamyad init --all &amp;&amp; hamyad connect chatgpt</code></div>
+    <div class="install" dir="ltr" id="install-box">
+      <div class="os-tabs" role="tablist" aria-label="Your system">
+        <button type="button" role="tab" data-os="unix" aria-selected="true">macOS · Linux</button>
+        <button type="button" role="tab" data-os="win" aria-selected="false">Windows</button>
+      </div>
+      <div class="install-row" data-os-row="unix"><span class="pr">$</span><code id="cmd-unix">curl -fsSL https://mrzroot.github.io/hamyad/install.sh | sh</code><button class="copy" data-copy="#cmd-unix" type="button" aria-label="Copy install command">copy</button></div>
+      <div class="install-row" data-os-row="win" hidden><span class="pr">PS&gt;</span><code id="cmd-win">irm https://mrzroot.github.io/hamyad/install.ps1 | iex</code><button class="copy" data-copy="#cmd-win" type="button" aria-label="Copy install command">copy</button></div>
+      <button class="btn btn-stamp oneclick" id="oneclick" type="button"><span data-t="inst.one">⧉ One click: copy the installer</span></button>
+      <p class="install-note" id="oneclick-note" data-t="inst.note">Paste it into a terminal inside your project. It installs Node if needed, asks before touching anything, wires every AI tool and can give ChatGPT &amp; Claude.ai a public URL.</p>
     </div>
   </div>
 
@@ -175,6 +182,25 @@
   </dialog>
 </section>
 
+<!-- ============================================================ TUTORIAL -->
+<section id="tutorial" class="tutorial">
+  <h2 data-t="tut.h">Step by step</h2>
+  <p class="section-lede" data-t="tut.lede">From zero to “every AI shares one brain” in a few minutes. Pick where you want to start; the animation shows each screen. Menus are drawn from the apps as of October 2026 and may move a little.</p>
+  <div class="tut-tabs" role="tablist" id="tut-tabs"></div>
+  <div class="tut-body">
+    <ol class="tut-steps" id="tut-steps"></ol>
+    <div class="tut-stage">
+      <div class="mk" id="tut-mock" aria-live="polite"></div>
+      <div class="tut-ctrl">
+        <button class="btn btn-ghost sm" id="tut-prev" type="button" aria-label="Previous step">←</button>
+        <span id="tut-pos" class="mono"></span>
+        <button class="btn btn-ghost sm" id="tut-play" type="button" data-t="tut.play">▶ Play</button>
+        <button class="btn btn-ghost sm" id="tut-next" type="button" aria-label="Next step">→</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============================================================ CONNECT -->
 <section id="connect" class="connect">
   <h2 data-t="conn.h">Connect any AI</h2>
@@ -252,18 +278,19 @@
   </div>
   <div class="tabpanel" id="t-code" role="tabpanel">
     <p data-t="setup.code">Inside your repo. <code>init --all</code> creates <code>.brain/</code> and merges MCP servers, hooks and rules for Claude Code, Codex, Gemini CLI, Cursor, Copilot, Windsurf, Zed, Roo, Junie and aider, without touching anything already there.</p>
-<pre dir="ltr"><code>npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.2.0/hamyad-0.2.0.tgz
-cd my-project
-hamyad init --all
+<pre dir="ltr"><code>cd my-project
+curl -fsSL https://mrzroot.github.io/hamyad/install.sh | sh      # Windows: irm https://mrzroot.github.io/hamyad/install.ps1 | iex
+#  = install Node if missing + hamyad + `hamyad setup` (init --all, pre-approve tools)
+# already have Node 20+?  npm i -g https://github.com/mrzroot/hamyad/releases/latest/download/hamyad.tgz && hamyad init --all
 git add -A &amp;&amp; git commit -m "Add hamyad brain" &amp;&amp; git push
 hamyad import      # past chats from Claude Code, Codex, Gemini, Copilot, Cursor, Windsurf, aider
 hamyad status      # which tools are wired, last session of each</code></pre>
   </div>
   <div class="tabpanel" id="t-chat" role="tabpanel" hidden>
-    <p data-t="setup.chat">Deploy the free Worker once, then add the same URL to each chat app. ChatGPT can also use it as a Custom GPT Action.</p>
-<pre dir="ltr"><code>cd hamyad/worker &amp;&amp; npx wrangler deploy
-npx wrangler secret put GITHUB_TOKEN    # fine-grained, one repo, Contents: read/write
-npx wrangler secret put HAMYAD_TOKEN    # long random string
+    <p data-t="setup.chat"><code>hamyad setup</code> gives chat apps a public URL: a free Cloudflare quick tunnel (no account, lives while the window is open) or a permanent free Worker (it runs <code>wrangler login</code> and deploys for you). It then prints every connector URL below and can open the Claude.ai and ChatGPT pages for you.</p>
+<pre dir="ltr"><code>hamyad setup            # wizard: 1) quick tunnel  2) Cloudflare Worker  3) own URL  4) skip
+hamyad tunnel           # just share this brain now (quick tunnel)
+hamyad setup --worker   # permanent URL on your free Cloudflare account
 
 ChatGPT     Developer mode → Add custom MCP server   URL/mcp/&lt;TOKEN&gt;?source=chatgpt
             or GPT → Actions → Import from URL       URL/openapi.json  (API key: Bearer &lt;TOKEN&gt;)

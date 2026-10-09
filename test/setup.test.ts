@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { cli, gitInit, rm, sh, tmp } from "./helpers.js";
 import { approveTools, connectorLinks, mcpUrl, renderConnectors, setup, workerToml } from "../src/node/setup.js";
@@ -77,7 +77,7 @@ test("setup wizard (interactive answers): init, skip approvals, skip chat apps",
       async () => ({ close() {} }),
     );
     assert.equal(rc, 0);
-    assert.equal(path.resolve(inited), path.resolve(dir));
+    assert.equal(realpathSync.native(inited), realpathSync.native(dir));
     assert.ok(existsSync(path.join(dir, ".brain", "config.json")));
     assert.equal(asked.length, 3);
     assert.match(asked[0], /Set up hamyad/);

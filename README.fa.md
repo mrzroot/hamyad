@@ -38,8 +38,21 @@ ChatGPT · Claude (Code، Desktop، claude.ai) · Codex · Gemini (CLI و اپ) 
 
 ## شروع سریع
 
+**نصب با یک خط** (اگر Node.js ندارید خودش نسخه‌ی قابل‌حمل را می‌گیرد، پروژه‌ی فعلی را راه می‌اندازد و قدم‌به‌قدم اتصال اپ‌های چت را انجام می‌دهد):
+
 ```bash
-npm i -g https://github.com/mrzroot/hamyad/releases/download/v0.2.0/hamyad-0.2.0.tgz
+curl -fsSL https://mrzroot.github.io/hamyad/install.sh | sh
+```
+```powershell
+irm https://mrzroot.github.io/hamyad/install.ps1 | iex
+```
+
+`hamyad setup` همان دستیار است و هر وقت خواستید دوباره اجرا کنید: hamyad را در Claude Code، Codex، Gemini CLI و Cursor CLI از قبل تأیید می‌کند و برای اپ‌های چت یک آدرس عمومی می‌سازد (تونل رایگان Cloudflare بدون حساب، یا `--worker` روی حساب Cloudflare خودتان، یا `--url`)، سپس آدرس آماده‌ی کانکتور و لینک مستقیم Claude.ai و ChatGPT و بقیه را چاپ می‌کند. آموزش تصویری: [سایت](https://mrzroot.github.io/hamyad/#tutorial).
+
+**نصب دستی:**
+
+```bash
+npm i -g https://github.com/mrzroot/hamyad/releases/latest/download/hamyad.tgz
 cd my-project
 hamyad init --all          # مغز + تنظیمات MCP و هوک برای همه‌ی ابزارها
 git add -A && git commit -m "Add hamyad brain" && git push

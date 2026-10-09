@@ -7,6 +7,13 @@
   // ------------------------------------------------------------------ i18n
   var FA = {
     "skip": "رفتن به دموی زنده",
+    "nav.tut": "آموزش",
+    "inst.one": "⧉ یک کلیک: کپی دستور نصب",
+    "inst.note": "آن را در ترمینالِ داخل پروژه‌تان بچسبانید. اگر Node نباشد نصبش می‌کند، قبل از هر تغییری می‌پرسد، همه‌ی ابزارهای AI را وصل می‌کند و می‌تواند برای ChatGPT و Claude.ai آدرس عمومی بسازد.",
+    "tut.h": "قدم‌به‌قدم",
+    "tut.lede": "از صفر تا «همه‌ی AIها یک مغز مشترک دارند» در چند دقیقه. از هرجا می‌خواهید شروع کنید؛ انیمیشن هر صفحه را نشان می‌دهد. منوها مطابق نسخه‌های مهر ۱۴۰۵ (اکتبر ۲۰۲۶) کشیده شده‌اند و ممکن است کمی جابه‌جا شوند.",
+    "tut.play": "▶ پخش",
+
     "nav.demo": "دموی زنده", "nav.connect": "وصل‌کردن هر AI", "nav.how": "چطور کار می‌کند", "nav.setup": "راه‌اندازی", "nav.compare": "مقایسه",
     "hero.kicker": "MIT · MCP + REST · بدون وابستگی",
     "hero.h1": "یک پروژه.<br>یک مغز.<br><em>همه‌ی AIها.</em>",
@@ -126,6 +133,7 @@
     history.replaceState(null, "", u);
     renderChips();
     renderBrain();
+    renderTut();
   }
   $("#lang").addEventListener("click", function () { setLang(lang === "fa" ? "en" : "fa"); });
 
@@ -473,6 +481,139 @@
     steps.forEach(function (s) { p = p.then(function () { return wait(1200); }).then(s); });
     p.then(function () { busy = false; b.disabled = false; }, function (e) { console.error(e); busy = false; b.disabled = false; });
   });
+
+
+  // ------------------------------------------------------------------ one-click install
+  var isWin = /Win/i.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || navigator.userAgent);
+  function pickOs(os) {
+    $$(".os-tabs [data-os]").forEach(function (b) { b.setAttribute("aria-selected", String(b.dataset.os === os)); });
+    $$("[data-os-row]").forEach(function (r) { r.hidden = r.dataset.osRow !== os; });
+  }
+  $$(".os-tabs [data-os]").forEach(function (b) { b.addEventListener("click", function () { pickOs(b.dataset.os); }); });
+  pickOs(isWin ? "win" : "unix");
+  var oneclick = $("#oneclick");
+  if (oneclick) oneclick.addEventListener("click", function () {
+    var row = $$("[data-os-row]").filter(function (r) { return !r.hidden; })[0];
+    var cmd = row ? $("code", row).textContent : "";
+    var span = $("span", oneclick);
+    var done = function () {
+      span.textContent = lang === "fa" ? (isWin ? "✓ کپی شد: در PowerShell بچسبانید" : "✓ کپی شد: در ترمینال بچسبانید") : (isWin ? "✓ Copied: paste into PowerShell" : "✓ Copied: paste into Terminal");
+      setTimeout(function () { span.innerHTML = (lang === "fa" ? FA : EN)["inst.one"]; }, 2600);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(cmd).then(done, function () { window.prompt("Copy:", cmd); });
+    else window.prompt("Copy:", cmd);
+  });
+
+  // ------------------------------------------------------------------ tutorial (animated mockups)
+  var TUN = "https://calm-river-demo.trycloudflare.com";
+  var TOKD = "k7Qe…Zp";
+  function L(en, fa) { return { en: en, fa: fa }; }
+  function tr(x) { return typeof x === "string" ? x : x[lang] || x.en; }
+  function mkTerm(lines, title) {
+    return '<div class="mk-win mk-term"><div class="mk-bar"><i></i><i></i><i></i><span>' + esc(title || "Terminal — ~/shop") + '</span></div><pre>' +
+      lines.map(function (l, i) { return '<span class="mk-line ' + (l[1] || "") + '" style="--d:' + (0.25 + i * 0.32).toFixed(2) + 's">' + esc(l[0]) + "</span>"; }).join("") + "</pre></div>";
+  }
+  function browser(url, body, cls) {
+    return '<div class="mk-win mk-browser ' + (cls || "") + '"><div class="mk-bar"><i></i><i></i><i></i><span class="mk-url">' + esc(url) + "</span></div><div class=\"mk-page\">" + body + "</div></div>";
+  }
+  var PTR = '<span class="mk-ptr" aria-hidden="true"></span>';
+  function field(label, value, d) { return '<label class="mk-field"><span>' + esc(label) + '</span><b class="mk-type" style="--d:' + (d || 0.6) + "s;--n:" + Math.min(value.length, 60) + '">' + esc(value) + "</b></label>"; }
+  function chat(app, turns) {
+    return turns.map(function (t, i) {
+      var d = "--d:" + (0.3 + i * 0.9).toFixed(1) + "s";
+      if (t[0] === "u") return '<div class="mk-msg u" style="' + d + '">' + esc(t[1]) + "</div>";
+      if (t[0] === "t") return '<div class="mk-tool" style="' + d + '">⚙ hamyad · ' + esc(t[1]) + "</div>";
+      return '<div class="mk-msg a ' + app + '" style="' + d + '">' + esc(t[1]) + "</div>";
+    }).join("");
+  }
+  var INSTALL_LINES = [
+    ["$ curl -fsSL https://mrzroot.github.io/hamyad/install.sh | sh", "y"],
+    ["==> Using Node.js v22.20.0", "g"],
+    ["==> Installing hamyad   ✓ hamyad 0.2.1 → ~/.local/bin/hamyad", "g"],
+    ["Set up hamyad for every AI tool in ~/shop? [Y/n] y", ""],
+    ["✓ hamyad brain ready: ~/shop/.brain  (claude, codex, gemini, cursor, copilot, windsurf…)", "g"],
+    ["Pre-approve hamyad in the AI tools installed here? [Y/n] y", ""],
+    ["  ✓ Claude Code  ✓ Codex  ✓ Gemini CLI  ✓ Cursor CLI", "g"],
+    ["Chat apps need a public HTTPS URL:  1) Quick tunnel  2) Cloudflare Worker  3) own URL  4) skip", "c"],
+    ["Choose [1-4] (default 1): 1", ""],
+    ["  ✓ " + TUN + " answers through the tunnel", "g"],
+    ["Claude.ai   URL  " + TUN + "/mcp/" + TOKD + "?source=claude-chat", "b"],
+    ["ChatGPT     URL  " + TUN + "/mcp/" + TOKD + "?source=chatgpt", "b"],
+    ["Open the Claude.ai and ChatGPT connector pages in your browser now? [y/N] y", ""]
+  ];
+  var TUT = {
+    claude: { name: "Claude.ai", steps: [
+      { t: L("Run the installer in your project", "نصب‌کننده را در پروژه اجرا کنید"),
+        d: L("One line. It installs Node if needed, sets up hamyad for every coding tool, pre-approves them and opens a free Cloudflare quick tunnel so Claude.ai can reach your brain.", "یک خط. اگر لازم باشد Node را نصب می‌کند، هم‌یاد را برای همه‌ی ابزارهای کدنویسی راه می‌اندازد، تأییدشان می‌کند و یک تونل رایگان کلادفلر باز می‌کند تا Claude.ai به مغز شما برسد."),
+        scene: function () { return mkTerm(INSTALL_LINES); } },
+      { t: L("The connector form opens pre-filled", "فرم کانکتور از پیش پر شده باز می‌شود"),
+        d: L("hamyad opens claude.ai → Customize → Connectors with “Add custom connector” already filled in (name hamyad, your URL). Check the URL and press Add.", "هم‌یاد صفحه‌ی claude.ai ← Customize ← Connectors را با فرم «Add custom connector» پرشده (نام hamyad و آدرس شما) باز می‌کند. آدرس را بررسی و Add را بزنید."),
+        scene: function () { return browser("claude.ai/customize/connectors?modal=add-custom-connector", '<div class="mk-side"><b>Customize</b><span>Profile</span><span class="on">Connectors</span><span>Skills</span></div><div class="mk-main"><h4>Connectors</h4><div class="mk-row">GitHub <em>connected</em></div><div class="mk-row">Google Drive</div></div><div class="mk-modal"><h5>Add custom connector <small>BETA</small></h5>' + field("Name", "hamyad", 0.4) + field("Remote MCP server URL", TUN + "/mcp/" + TOKD + "?source=claude-chat", 0.9) + '<p class="mk-warn">This link pre-filled the form. Make sure you trust the URL.</p><div class="mk-actions"><span class="mk-btn ghost">Cancel</span><span class="mk-btn primary mk-target">Add' + PTR + "</span></div></div>", "claude"); } },
+      { t: L("Turn it on in a chat", "در چت روشنش کنید"),
+        d: L("In any chat or Project: + → Connectors → switch hamyad on. Tip: put the block from `hamyad connect instructions` in the Project instructions.", "در هر چت یا Project: ‎+‎ ← Connectors ← hamyad را روشن کنید. نکته: متن `hamyad connect instructions` را در دستورالعمل Project بگذارید."),
+        scene: function () { return browser("claude.ai/project/shop", '<div class="mk-chatwrap"><div class="mk-composer"><span class="mk-plus mk-target">+' + PTR + '</span><span class="mk-ph">How can I help you today?</span></div><div class="mk-menu" style="--d:1.2s"><span>Add files or photos</span><span class="on">Connectors ›</span><div class="mk-sub"><span>GitHub <i class="mk-tg on"></i></span><span>hamyad <i class="mk-tg anim"></i></span><span>Web search <i class="mk-tg on"></i></span></div></div></div>', "claude"); } },
+      { t: L("Claude now sees every other AI", "حالا Claude همه‌ی AIهای دیگر را می‌بیند"),
+        d: L("Ask about the project: Claude reads the brief (decisions, tasks, what Codex and Cursor changed) and saves new decisions back for them.", "درباره‌ی پروژه بپرسید: Claude خلاصه (تصمیم‌ها، کارها، تغییرات Codex و Cursor) را می‌خواند و تصمیم‌های تازه را برای آن‌ها ذخیره می‌کند."),
+        scene: function () { return browser("claude.ai/chat", '<div class="mk-chat">' + chat("claude", [["u", "What did Codex change since yesterday, and what's still open?"], ["t", "brain_context {}"], ["a", "Codex added Zarinpal checkout (3 files, +56 −4) following the FastAPI decision from ChatGPT. Open: SMS rate limit. Want me to record anything?"], ["u", "Yes: we cache the catalogue in Redis."], ["t", "brain_remember {kind: decision, title: Cache catalogue in Redis}"], ["a", "Saved. Codex, Cursor and Claude Code will see it at their next session."]]) + "</div>", "claude"); } }
+    ] },
+    chatgpt: { name: "ChatGPT", steps: [
+      { t: L("Get your public URL", "آدرس عمومی بگیرید"),
+        d: L("Run the installer (or just `hamyad tunnel` if hamyad is already installed). Keep the window open while you chat; for a permanent URL choose the Cloudflare Worker.", "نصب‌کننده را اجرا کنید (یا اگر نصب است فقط `hamyad tunnel`). تا وقتی چت می‌کنید پنجره را باز نگه دارید؛ برای آدرس دائمی Worker کلادفلر را انتخاب کنید."),
+        scene: function () { return mkTerm(INSTALL_LINES.slice(7, 12).concat([["ChatGPT     open https://chatgpt.com/#settings/Connectors", "b"]]), "Terminal — hamyad tunnel"); } },
+      { t: L("Turn on Developer mode", "Developer mode را روشن کنید"),
+        d: L("Settings → Apps → Advanced settings → Developer mode. (Plus, Pro, Business, Enterprise, Edu; on Business/Enterprise an admin may need to allow it.)", "Settings ← Apps ← Advanced settings ← Developer mode. (پلن‌های Plus، Pro، Business، Enterprise و Edu؛ در Business/Enterprise ممکن است مدیر باید اجازه دهد.)"),
+        scene: function () { return browser("chatgpt.com/#settings/Connectors", '<div class="mk-modal wide"><div class="mk-side"><span>General</span><span>Notifications</span><span>Personalization</span><span class="on">Apps</span><span>Data controls</span></div><div class="mk-main"><h5>Apps</h5><div class="mk-row">Enabled apps</div><div class="mk-row mk-adv">Advanced settings</div><div class="mk-row">Developer mode <small>Allows adding unverified apps</small><i class="mk-tg anim mk-target">' + PTR + '</i></div><div class="mk-row mk-appear" style="--d:2s"><span class="mk-btn primary">Create app</span></div></div></div>', "gpt"); } },
+      { t: L("Create the app with your URL", "اپ را با آدرس خودتان بسازید"),
+        d: L("Create app → Name: hamyad → MCP Server URL: the ChatGPT line hamyad printed → Authentication: No authentication (the token is inside the URL) → tick “I trust this application” → Create.", "Create app ← نام: hamyad ← MCP Server URL: خطی که هم‌یاد برای ChatGPT چاپ کرد ← Authentication: No authentication (توکن داخل آدرس است) ← تیک «I trust this application» ← Create."),
+        scene: function () { return browser("chatgpt.com", '<div class="mk-modal"><h5>New App <small>BETA</small></h5>' + field("Name", "hamyad", 0.3) + field("Description", "Shared project brain for every AI", 0.7) + field("MCP Server URL", TUN + "/mcp/" + TOKD + "?source=chatgpt", 1.2) + field("Authentication", "No authentication", 2.2) + '<label class="mk-check" style="--d:2.8s"><i></i> I understand and want to continue</label><div class="mk-actions"><span class="mk-btn primary mk-target">Create' + PTR + "</span></div></div>", "gpt"); } },
+      { t: L("Use it in any chat", "در هر چتی استفاده کنید"),
+        d: L("+ → Developer mode → hamyad. ChatGPT reads the shared brief and writes decisions; deep research can use its search/fetch tools.", "‎+‎ ← Developer mode ← hamyad. ChatGPT خلاصه‌ی مشترک را می‌خواند و تصمیم‌ها را می‌نویسد؛ deep research هم از ابزارهای search/fetch آن استفاده می‌کند."),
+        scene: function () { return browser("chatgpt.com", '<div class="mk-chat">' + chat("gpt", [["u", "Use hamyad. Remember: the backend moves from Express to FastAPI."], ["t", "brain_remember {kind: decision, supersedes: [d-…express]}"], ["a", "Saved, and marked “Backend: Node + Express” as superseded. Claude Code, Codex and Cursor will see “⚠ DECISIONS CHANGED” at their next session."]]) + "</div>", "gpt"); } },
+      { t: L("No Developer mode? Use a GPT Action", "Developer mode ندارید؟ از GPT Action استفاده کنید"),
+        d: L("Explore GPTs → Create → Configure → Actions → Import from URL: <your URL>/openapi.json → Authentication: API Key, Bearer, your token.", "Explore GPTs ← Create ← Configure ← Actions ← Import from URL: ‏<آدرس شما>/openapi.json ← Authentication: API Key، نوع Bearer، توکن شما."),
+        scene: function () { return browser("chatgpt.com/gpts/editor", '<div class="mk-modal"><h5>Add actions</h5>' + field("Import from URL", TUN + "/openapi.json", 0.4) + '<div class="mk-row mk-appear" style="--d:1.4s">✓ 9 operations: getContext, search, listEntries, createEntry, updateEntry, timeline…</div>' + field("Authentication", "API Key · Bearer · " + TOKD, 2) + '<div class="mk-actions"><span class="mk-btn primary mk-target">Save' + PTR + "</span></div></div>", "gpt"); } }
+    ] },
+    cursor: { name: "Cursor", steps: [
+      { t: L("Install from Cursor's terminal", "از ترمینال Cursor نصب کنید"),
+        d: L("Open your project in Cursor, open the terminal (Ctrl+`) and paste the one-line installer. It writes .cursor/mcp.json, hooks and a rule, and approves the server for the Cursor CLI.", "پروژه را در Cursor باز کنید، ترمینال را باز کنید (Ctrl+`) و دستور یک‌خطی را بچسبانید. فایل‌های ‎.cursor/mcp.json‎، هوک‌ها و قاعده را می‌نویسد و سرور را برای Cursor CLI تأیید می‌کند."),
+        scene: function () { return '<div class="mk-win mk-ide"><div class="mk-bar"><i></i><i></i><i></i><span>shop — Cursor</span></div><div class="mk-idebody"><div class="mk-tree"><b>SHOP</b><span>.brain/</span><span>.cursor/</span><span class="ind">hooks.json</span><span class="ind">mcp.json</span><span class="ind">rules/hamyad.mdc</span><span>app/</span><span>AGENTS.md</span></div>' + mkTerm(INSTALL_LINES.slice(0, 7), "TERMINAL") + "</div></div>"; } },
+      { t: L("Switch the server on once", "سرور را یک‌بار روشن کنید"),
+        d: L("Cursor Settings → Tools & MCP → hamyad (project) → on. Editors keep this switch to themselves, so it is the one click hamyad cannot do for you.", "Cursor Settings ← Tools & MCP ← hamyad (پروژه) ← روشن. ویرایشگرها این کلید را فقط دست خودشان نگه می‌دارند، پس این تنها کلیکی است که هم‌یاد نمی‌تواند به‌جای شما بزند."),
+        scene: function () { return '<div class="mk-win mk-ide"><div class="mk-bar"><i></i><i></i><i></i><span>Cursor Settings</span></div><div class="mk-page"><div class="mk-side"><span>General</span><span>Models</span><span>Agents</span><span class="on">Tools &amp; MCP</span><span>Rules</span></div><div class="mk-main"><h5>Installed MCP servers</h5><div class="mk-row"><b>hamyad</b> <small>project · 8 tools</small><i class="mk-tg anim mk-target">' + PTR + '</i></div><div class="mk-row mk-appear" style="--d:1.8s"><small>brain_context · brain_search · brain_remember · brain_update · brain_timeline …</small></div></div></div></div>'; } },
+      { t: L("Every new agent chat starts informed", "هر چت ایجنت با اطلاعات کامل شروع می‌شود"),
+        d: L("The sessionStart hook injects the brief and what changed since Cursor's last session, so the agent follows the new decision instead of the old one.", "هوک sessionStart خلاصه و تغییرات از آخرین جلسه‌ی Cursor را تزریق می‌کند تا ایجنت از تصمیم تازه پیروی کند نه قدیمی."),
+        scene: function () { return '<div class="mk-win mk-ide"><div class="mk-bar"><i></i><i></i><i></i><span>shop — Cursor · Agent</span></div><div class="mk-page mk-agent"><div class="mk-hook" style="--d:.3s">⚠ DECISIONS CHANGED since your last Cursor session<br>- REPLACED: “Backend: Node + Express” → “Backend: switch to FastAPI” (ChatGPT)<br>- NEW decision: “Cache catalogue in Redis” (Claude.ai chat)</div>' + chat("cur", [["u", "add the order history endpoint"], ["a", "Following the active decisions: FastAPI route in app/orders.py, cached via Redis. Editing 2 files…"]]) + "</div></div>"; } },
+      { t: L("…and everyone sees what Cursor did", "…و همه می‌بینند Cursor چه کرد"),
+        d: L("When the agent stops, hamyad logs the session and its git diff. `hamyad timeline` (and every other AI) shows it next to ChatGPT's and Claude's work.", "وقتی ایجنت تمام می‌کند، هم‌یاد جلسه و git diff آن را ثبت می‌کند. ‏`hamyad timeline` (و همه‌ی AIهای دیگر) آن را کنار کارهای ChatGPT و Claude نشان می‌دهد."),
+        scene: function () { return mkTerm([["$ hamyad timeline -n 6", "y"], ["2026-10-09", "c"], ["  14:12  Cursor        change   2 file(s) +41 −3 — add the order history endpoint", "b"], ["  14:12  Cursor        session  add the order history endpoint", ""], ["  13:40  Claude.ai     decision Cache catalogue in Redis", "o"], ["  13:05  Codex         change   3 file(s) +56 −4 — Zarinpal checkout", "b"], ["  12:31  ChatGPT       superseded  Backend: Node + Express → Backend: switch to FastAPI", "o"], ["  12:30  ChatGPT       decision Backend: switch to FastAPI", "o"]], "Terminal — ~/shop"); } }
+    ] }
+  };
+  var tutCur = "claude", tutIdx = 0, tutTimer = null;
+  function renderTut() {
+    var tabs = $("#tut-tabs"); if (!tabs) return;
+    tabs.innerHTML = Object.keys(TUT).map(function (k) { return '<button type="button" role="tab" aria-selected="' + (k === tutCur) + '" data-tut="' + k + '">' + esc(TUT[k].name) + "</button>"; }).join("");
+    $$("[data-tut]", tabs).forEach(function (b) { b.onclick = function () { tutCur = b.dataset.tut; tutIdx = 0; stopTut(); renderTut(); }; });
+    var steps = TUT[tutCur].steps;
+    $("#tut-steps").innerHTML = steps.map(function (st, i) {
+      return '<li class="' + (i === tutIdx ? "on" : "") + '" data-i="' + i + '"><b>' + esc(tr(st.t)) + "</b><p>" + esc(tr(st.d)).replace(/`([^`]+)`/g, "<code>$1</code>") + "</p></li>";
+    }).join("");
+    $$("#tut-steps li").forEach(function (li) { li.onclick = function () { tutIdx = +li.dataset.i; stopTut(); renderTut(); }; });
+    var mock = $("#tut-mock");
+    mock.className = "mk mk-" + tutCur;
+    mock.innerHTML = steps[tutIdx].scene();
+    $("#tut-pos").textContent = (tutIdx + 1) + " / " + steps.length;
+  }
+  function stopTut() { if (tutTimer) clearInterval(tutTimer); tutTimer = null; var b = $("#tut-play"); if (b) b.innerHTML = (lang === "fa" ? FA : EN)["tut.play"]; }
+  function stepTut(d) { var n = TUT[tutCur].steps.length; tutIdx = (tutIdx + d + n) % n; renderTut(); }
+  if ($("#tut-prev")) {
+    $("#tut-prev").onclick = function () { stopTut(); stepTut(-1); };
+    $("#tut-next").onclick = function () { stopTut(); stepTut(1); };
+    $("#tut-play").onclick = function () {
+      if (tutTimer) return stopTut();
+      this.textContent = "❚❚";
+      tutTimer = setInterval(function () { stepTut(1); }, 6500);
+    };
+  }
 
   // ------------------------------------------------------------------ boot
   reset();

@@ -111,6 +111,11 @@ jobs:
           node-version: "22"
           cache: npm
       - run: npm ci; npm pack; Move-Item hamyad-*.tgz hamyad.tgz
+      - name: the published install.ps1 arrives as a script string through irm
+        run: |
+          $c = irm https://mrzroot.github.io/hamyad/install.ps1
+          Write-Host ("irm returned " + $c.GetType().FullName)
+          if ($c -isnot [string] -or $c -notmatch 'hamyad one-line installer') { throw 'irm did not return the script text' }
       - name: irm … | iex (portable Node, non-interactive)
         run: |
           $proj = Join-Path $env:RUNNER_TEMP "proj-${{ matrix.shell }}"
