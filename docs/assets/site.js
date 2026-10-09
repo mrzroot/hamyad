@@ -8,7 +8,7 @@
   var FA = {
     "skip": "رفتن به دموی زنده",
     "nav.tut": "آموزش",
-    "inst.one": "⧉ یک کلیک: کپی دستور نصب",
+    "inst.one": "یک کلیک: کپی دستور نصب",
     "inst.note": "آن را در ترمینالِ داخل پروژه‌تان بچسبانید. اگر Node نباشد نصبش می‌کند، قبل از هر تغییری می‌پرسد، همه‌ی ابزارهای AI را وصل می‌کند و می‌تواند برای ChatGPT و Claude.ai آدرس عمومی بسازد.",
     "tut.h": "قدم‌به‌قدم",
     "tut.lede": "از صفر تا «همه‌ی AIها یک مغز مشترک دارند» در چند دقیقه. از هرجا می‌خواهید شروع کنید؛ انیمیشن هر صفحه را نشان می‌دهد. منوها مطابق نسخه‌های مهر ۱۴۰۵ (اکتبر ۲۰۲۶) کشیده شده‌اند و ممکن است کمی جابه‌جا شوند.",
@@ -602,7 +602,24 @@
     mock.className = "mk mk-" + tutCur;
     mock.innerHTML = steps[tutIdx].scene();
     $("#tut-pos").textContent = (tutIdx + 1) + " / " + steps.length;
+    fitTut();
   }
+  // The mockups are drawn at a fixed design width and scaled to whatever room the column has,
+  // so a phone shows the whole window (smaller) instead of a cut-off one.
+  function fitTut() {
+    var fit = $("#tut-fit"), mock = $("#tut-mock"); if (!fit || !mock) return;
+    var w = fit.clientWidth; if (!w) return;
+    var design = w >= 600 ? w : Math.max(w, 420);
+    var s = Math.min(1, w / design);
+    mock.style.width = design + "px";
+    mock.style.transform = s < 1 ? "scale(" + s.toFixed(4) + ")" : "";
+    fit.style.height = Math.ceil(mock.offsetHeight * s) + "px";
+  }
+  if (window.ResizeObserver && $("#tut-fit")) {
+    var fitRaf = 0, refit = function () { cancelAnimationFrame(fitRaf); fitRaf = requestAnimationFrame(fitTut); };
+    new ResizeObserver(refit).observe($("#tut-fit"));
+    new ResizeObserver(refit).observe($("#tut-mock"));
+  } else { window.addEventListener("resize", fitTut); }
   function stopTut() { if (tutTimer) clearInterval(tutTimer); tutTimer = null; var b = $("#tut-play"); if (b) b.innerHTML = (lang === "fa" ? FA : EN)["tut.play"]; }
   function stepTut(d) { var n = TUT[tutCur].steps.length; tutIdx = (tutIdx + d + n) % n; renderTut(); }
   if ($("#tut-prev")) {

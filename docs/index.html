@@ -60,7 +60,7 @@
       </div>
       <div class="install-row" data-os-row="unix"><span class="pr">$</span><code id="cmd-unix">curl -fsSL https://mrzroot.github.io/hamyad/install.sh | sh</code><button class="copy" data-copy="#cmd-unix" type="button" aria-label="Copy install command">copy</button></div>
       <div class="install-row" data-os-row="win" hidden><span class="pr">PS&gt;</span><code id="cmd-win">irm https://mrzroot.github.io/hamyad/install.ps1 | iex</code><button class="copy" data-copy="#cmd-win" type="button" aria-label="Copy install command">copy</button></div>
-      <button class="btn btn-stamp oneclick" id="oneclick" type="button"><span data-t="inst.one">⧉ One click: copy the installer</span></button>
+      <button class="btn btn-stamp oneclick" id="oneclick" type="button"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></svg><span data-t="inst.one">One click: copy the installer</span></button>
       <p class="install-note" id="oneclick-note" data-t="inst.note">Paste it into a terminal inside your project. It installs Node if needed, asks before touching anything, wires every AI tool and can give ChatGPT &amp; Claude.ai a public URL.</p>
     </div>
   </div>
@@ -190,7 +190,7 @@
   <div class="tut-body">
     <ol class="tut-steps" id="tut-steps"></ol>
     <div class="tut-stage">
-      <div class="mk" id="tut-mock" aria-live="polite"></div>
+      <div class="tut-fit" id="tut-fit"><div class="mk" id="tut-mock" aria-live="polite"></div></div>
       <div class="tut-ctrl">
         <button class="btn btn-ghost sm" id="tut-prev" type="button" aria-label="Previous step">←</button>
         <span id="tut-pos" class="mono"></span>
