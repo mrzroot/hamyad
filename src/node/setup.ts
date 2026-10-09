@@ -510,6 +510,11 @@ export async function setup(o: SetupOptions, start: (p: Project, port: number, t
   // 3. public URL for chat apps
   const prev = readRemote(p);
   let mode = o.mode;
+  if (!mode && !interactive) {
+    // unattended runs never start a long-running tunnel or a deploy on their own
+    print("\n  chat apps: skipped (pass --tunnel, --worker or --url <https://...> to connect them without questions)");
+    mode = "none";
+  }
   if (!mode) {
     print("");
     print("Chat apps (ChatGPT, Claude.ai, Grok, Perplexity, Gemini) run in the cloud and need a public HTTPS URL:");

@@ -85,6 +85,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
+    timeout-minutes: 20
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -96,6 +97,7 @@ jobs:
       - run: sh scripts/e2e/installer.sh hamyad.tgz
 
   installer-windows:
+    timeout-minutes: 20
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -141,6 +143,7 @@ jobs:
 
   tunnel-smoke:
     # real Cloudflare quick tunnel from a GitHub runner: public URL → hamyad serve (token-protected)
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:

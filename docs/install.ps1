@@ -26,7 +26,7 @@ function Ask($q, $def) {
 function IsYes($a) { return $a -match '^(y|yes|1)$' }
 function NodeOk($exe) {
   if (-not $exe -or -not (Test-Path $exe)) { return $false }
-  try { $v = & $exe -p 'process.versions.node.split(".")[0]'; return [int]$v -ge 20 } catch { return $false }
+  try { $v = (& $exe -p process.versions.node | Out-String).Trim(); return [int]($v.Split('.')[0]) -ge 20 } catch { return $false }
 }
 
 Write-Host 'hamyad' -NoNewline -ForegroundColor White; Write-Host ' - one shared brain for every AI tool - https://mrzroot.github.io/hamyad/' -ForegroundColor DarkGray
@@ -107,7 +107,9 @@ if (-not $Yes) {
 Step "hamyad setup in $Dir"
 Push-Location $Dir
 try {
-  $extra = if ($env:HAMYAD_SETUP_ARGS) { $env:HAMYAD_SETUP_ARGS -split '\s+' } elseif ($Interactive) { @() } else { @('--no-chat') }
-  if ($Interactive) { & $Hamyad setup --init @extra } else { & $Hamyad setup --init -y @extra }
+  [string[]]$extra = @()
+  if ($env:HAMYAD_SETUP_ARGS) { $extra = @($env:HAMYAD_SETUP_ARGS -split '\s+' | Where-Object { $_ }) } elseif (-not $Interactive) { $extra = @('--no-chat') }
+  if (-not $Interactive) { $extra = @('-y') + $extra }
+  & $Hamyad setup --init $extra
   if ($LASTEXITCODE -ne 0) { Write-Host "hamyad setup exited with $LASTEXITCODE" -ForegroundColor Yellow }
 } finally { Pop-Location }
