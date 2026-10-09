@@ -1,6 +1,6 @@
 {
   "name": "hamyad",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "One shared project brain for Claude Code, Claude.ai chat, Claude Desktop and GitHub. Git-backed MCP memory (.brain/) with stdio + remote HTTP (Cloudflare Workers) transports, Claude Code hooks and a sync CLI.",
   "license": "MIT",
   "author": "Mohammadreza Zare (M-R-Z) <https://github.com/mrzroot>",

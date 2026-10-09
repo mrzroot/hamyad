@@ -26,7 +26,7 @@ type Flags = Record<string, string | boolean>;
 export function parseArgs(argv: string[]): { pos: string[]; flags: Flags } {
   const pos: string[] = [];
   const flags: Flags = {};
-  const short: Record<string, string> = { m: "body", t: "tags", s: "status", n: "limit", k: "kind", p: "port", d: "dir", h: "help", v: "version" };
+  const short: Record<string, string> = { y: "yes", m: "body", t: "tags", s: "status", n: "limit", k: "kind", p: "port", d: "dir", h: "help", v: "version" };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === "--") {
@@ -46,7 +46,7 @@ export function parseArgs(argv: string[]): { pos: string[]; flags: Flags } {
       continue;
     }
     if (val === undefined && i + 1 < argv.length && !argv[i + 1].startsWith("-")) {
-      const boolish = ["help", "version", "json", "dry-run", "git", "all", "global", "quiet", "import", "once"];
+      const boolish = ["help", "version", "json", "dry-run", "git", "all", "global", "quiet", "import", "once", "yes", "open", "approve", "tunnel", "worker", "init", "verify"];
       if (!boolish.includes(key)) val = argv[++i];
     }
     flags[key] = val === undefined ? true : val;
@@ -66,6 +66,10 @@ const HELP = `${bold("hamyad")} ${VERSION} · one shared project brain for every
   Zed · Cline/Roo · JetBrains · aider · anything else via MCP, REST/OpenAPI or one MEMORY.md
 
 ${bold("Setup")}
+  hamyad setup [--tunnel | --worker | --url URL | --no-chat] [-y] [--open] [--no-approve] [-p 8787]
+                                        wizard: init --all, pre-approve tools, public URL for chat apps
+                                        (free Cloudflare quick tunnel or Worker) + ready-to-paste connector links
+  hamyad tunnel                         = setup --tunnel -y: share this brain with chat apps right now
   hamyad init [--all | --tools claude,codex,gemini,cursor,copilot,windsurf,aider,zed,roo,junie] [--global]
               [--store PATH|FILE.md] [--capture off|summary|full] [--no-git-hook] [--project NAME]
                                         wire MCP + hooks + instruction files for each tool
@@ -227,6 +231,42 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       await serveHttp((ctx) => new McpServer(brain, { source: explicit || ctx.source, fallbackSource: source }), { port, host, token, label });
       process.stderr.write(`hamyad MCP (Streamable HTTP) on http://${host}:${port}/mcp  store=${label}  auth=${token ? "token" : "none"}\n`);
       return await new Promise<number>(() => {});
+    }
+    case "setup":
+    case "tunnel": {
+      const { setup } = await import("./node/setup.js");
+      const mode = cmd === "tunnel" || flags.tunnel ? "tunnel" : flags.worker ? "worker" : typeof flags.url === "string" ? "url" : flags.chat === false ? "none" : undefined;
+      return await setup(
+        {
+          dir,
+          mode,
+          url: typeof flags.url === "string" ? flags.url : undefined,
+          token: typeof flags.token === "string" ? flags.token : process.env.HAMYAD_TOKEN || undefined,
+          yes: !!flags.yes || cmd === "tunnel",
+          open: typeof flags.open === "boolean" ? flags.open : undefined,
+          approve: typeof flags.approve === "boolean" ? flags.approve : undefined,
+          init: typeof flags.init === "boolean" ? flags.init : undefined,
+          port: flags.port ? Number(flags.port) : undefined,
+          once: !!flags.once,
+          verify: flags.verify !== false,
+          color: C,
+          runInit: (root) => main(["init", "--all", "--dir", root]),
+        },
+        async (p, port, token) => {
+          const brain = p.brainInGit
+            ? new Brain(
+                new (await import("./backends/fs.js")).FsBackend(p.brainDir, (_abs, message) => {
+                  const rep: SyncReport = { skipped: [] };
+                  commitBrain(p.root, brainRel(p), message, rep);
+                  pushBrain(p.root, rep);
+                }),
+                { source: "claude-chat", afterWrite: () => regenerate(p).then(() => undefined) },
+              )
+            : p.brain;
+          const srv = await serveHttp((ctx) => new McpServer(brain, { source: ctx.source, fallbackSource: "claude-chat" }), { port, host: "127.0.0.1", token, label: `fs:${p.brainDir}` });
+          return { close: () => srv.close() };
+        },
+      );
     }
     case "hook": {
       // hamyad hook <tool> <event>   (0.1: hamyad hook session-start|session-end  = claude)

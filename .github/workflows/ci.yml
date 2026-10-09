@@ -41,6 +41,21 @@ jobs:
         run: npx -y wrangler@4 deploy --dry-run --outdir ../build/wrangler
       - name: Smoke test on workerd (wrangler dev)
         run: node scripts/worker-smoke.mjs
+      - name: hamyad setup --worker builds a deployable Worker (real wrangler, --dry-run)
+        run: |
+          mkdir -p /tmp/wp && cd /tmp/wp && git init -q && git remote add origin https://github.com/acme/shop.git
+          cat > /tmp/wrangler-dry <<'SH'
+          #!/bin/sh
+          case "$1" in
+            whoami) echo "logged in";;
+            deploy) shift; npx -y wrangler@4 deploy --dry-run --outdir /tmp/wout "$@" && echo "https://hamyad-shop.acme.workers.dev";;
+            secret) read v; echo ok;;
+          esac
+          SH
+          chmod +x /tmp/wrangler-dry
+          HAMYAD_WRANGLER=/tmp/wrangler-dry GITHUB_TOKEN=x node $GITHUB_WORKSPACE/dist/src/cli.js setup --worker -y --init --no-approve --no-verify | tee /tmp/w.log
+          grep -q "hamyad-shop.acme.workers.dev/mcp/" /tmp/w.log
+          ls /tmp/wout
 
   pack:
     runs-on: ubuntu-latest
@@ -62,3 +77,86 @@ jobs:
         with:
           name: hamyad-tgz
           path: hamyad-*.tgz
+
+  installer-unix:
+    # docs/install.sh on a machine without Node: portable Node download, install, `hamyad setup`,
+    # then the interactive flow through a real pseudo-terminal
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci && npm pack && mv hamyad-*.tgz hamyad.tgz
+      - run: sh scripts/e2e/installer.sh hamyad.tgz
+
+  installer-windows:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [pwsh, powershell]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci; npm pack; Move-Item hamyad-*.tgz hamyad.tgz
+      - name: irm … | iex (portable Node, non-interactive)
+        run: |
+          $proj = Join-Path $env:RUNNER_TEMP "proj-${{ matrix.shell }}"
+          New-Item -ItemType Directory -Force $proj | Out-Null
+          Set-Location $proj; git init -q
+          $env:HAMYAD_HOME = Join-Path $env:RUNNER_TEMP "hh-${{ matrix.shell }}"
+          $env:HAMYAD_TARBALL = Join-Path $env:GITHUB_WORKSPACE 'hamyad.tgz'
+          $env:HAMYAD_YES = '1'; $env:HAMYAD_NODE = 'portable'
+          Get-Content -Raw (Join-Path $env:GITHUB_WORKSPACE 'docs/install.ps1') | Invoke-Expression
+          if (-not (Test-Path (Join-Path $env:HAMYAD_HOME 'node\node.exe'))) { throw 'portable node missing' }
+          $h = Join-Path $env:HAMYAD_HOME 'bin\hamyad.cmd'
+          $v = & $h --version; Write-Host "installed $v"
+          if ($v -notmatch '^\d+\.\d+\.\d+$') { throw "bad version $v" }
+          foreach ($f in '.brain\config.json', '.mcp.json', '.cursor\mcp.json', '.codex\config.toml', '.gemini\settings.json') { if (-not (Test-Path $f)) { throw "missing $f" } }
+          if (-not ([Environment]::GetEnvironmentVariable('Path', 'User') -split ';' -contains (Join-Path $env:HAMYAD_HOME 'bin'))) { throw 'user PATH not updated' }
+          & $h add decision "Windows installer works" | Out-Null
+          if (-not ((& $h context) -match 'Windows installer works')) { throw 'context missing decision' }
+          # second run reuses the portable Node and is idempotent
+          $out = Get-Content -Raw (Join-Path $env:GITHUB_WORKSPACE 'docs/install.ps1') | Invoke-Expression *>&1 | Out-String
+          if ($out -notmatch 'Using portable Node.js') { Write-Host $out; throw 'portable node not reused' }
+          & $h setup --url https://brain.example.com -y --no-approve | Tee-Object -Variable s | Out-Null
+          if (-not (($s | Out-String) -match 'brain.example.com/mcp/')) { throw 'setup --url did not print connector URLs' }
+
+  tunnel-smoke:
+    # real Cloudflare quick tunnel from a GitHub runner: public URL → hamyad serve (token-protected)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci && npm run build
+      - name: hamyad setup --tunnel (downloads cloudflared, waits until the public URL answers)
+        run: |
+          mkdir -p /tmp/tp && cd /tmp/tp && git init -q
+          export HAMYAD_HOME=/tmp/hh
+          node $GITHUB_WORKSPACE/dist/src/cli.js setup --tunnel --init --no-approve -p 18787 > /tmp/setup.log 2>&1 &
+          for i in $(seq 1 90); do grep -q "answers through the tunnel\|does not answer\|tunnel failed" /tmp/setup.log && break; sleep 2; done
+          cat /tmp/setup.log
+          grep -q "answers through the tunnel" /tmp/setup.log
+          URL=$(grep -o 'https://[a-z0-9-]*\.trycloudflare\.com/mcp/[^ ]*source=chatgpt' /tmp/setup.log | head -1)
+          BASE=${URL%%/mcp/*}
+          curl -fsS "$BASE/openapi.json" | grep -q '"openapi"'
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'content-type: application/json' -d '{}' "$BASE/mcp"); test "$code" = 401
+          curl -fsS -X POST -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' "$URL" | grep -q brain_remember
+          echo "tunnel OK: $BASE"
