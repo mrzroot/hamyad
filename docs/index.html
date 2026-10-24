@@ -38,7 +38,7 @@ html[data-theme=light] .mk-ide .mk-side span{color:#4f5878}
 html[data-theme=light] .mk-ide .mk-side span.on{background:#e0d9c7;color:#0b1230}
 html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
 </style>
-</head>
+<link rel="preload" href="fonts/outfit-700.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="identity.css"></head>
 <body>
 <a class="skip" href="#demo" data-t="skip">Skip to the live demo</a>
 
@@ -395,5 +395,5 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
 if(q&&q.addEventListener)q.addEventListener('change',function(){var m;try{m=localStorage.getItem('mrz-theme')}catch(e){}if(m!=='light'&&m!=='dark')set(q.matches?'dark':'light',false)});
 window.addEventListener('storage',function(e){if(e.key==='mrz-theme'){var m=e.newValue;set(m==='light'||m==='dark'?m:(q&&q.matches?'dark':'light'),false)}});
 if(window.MutationObserver)new MutationObserver(sync).observe(d,{attributes:true,attributeFilter:['data-lang','lang','data-theme']});sync()})()</script>
-</body>
+<script src="fx.js" defer></script></body>
 </html>

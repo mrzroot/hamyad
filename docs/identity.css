@@ -1,0 +1,24 @@
+/* hamyad identity: "pop synapse". Ivory / ink-violet with four tool colours; Outfit display; particles from every AI converge on one brain. */
+@font-face{font-family:'Outfit';src:url(fonts/outfit-700.woff2) format('woff2');font-weight:600 800;font-display:swap}
+html[data-theme=dark] body{background:radial-gradient(60% 50% at 15% 10%,rgba(255,106,61,.18),transparent 70%),radial-gradient(55% 45% at 90% 20%,rgba(123,108,246,.25),transparent 70%),radial-gradient(60% 50% at 60% 100%,rgba(30,200,170,.16),transparent 70%),#0b0818!important}
+html[data-theme=light] body{background:radial-gradient(60% 50% at 10% 8%,rgba(255,140,80,.28),transparent 70%),radial-gradient(55% 45% at 92% 18%,rgba(123,108,246,.26),transparent 70%),radial-gradient(60% 50% at 55% 100%,rgba(30,200,170,.22),transparent 70%),#fbf5e8!important}
+html[data-theme=dark]{--desk-fg:#f4efff;--desk-fg2:#ffffff}
+html[data-theme=light]{--desk-fg:#1d1640;--desk-fg2:#140e33}
+h1,h2{font-family:Outfit,Lalezar,sans-serif!important;font-weight:800!important;letter-spacing:-.04em!important}
+h1{font-size:clamp(48px,7.4vw,108px)!important;line-height:.92!important}
+h1 em{font-style:normal!important;background:linear-gradient(90deg,#ff7a3d,#ff4f8b,#7b6cf6,#1fc8aa,#ff7a3d);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent!important;animation:hy 7s linear infinite;padding-inline:.04em}
+@keyframes hy{to{background-position:300% 0}}
+html[lang=fa] h1,html[lang=fa] h2{font-family:Lalezar,Vazirmatn,sans-serif!important;font-weight:400!important;letter-spacing:0!important;line-height:1.2!important}
+main#top{position:relative}
+.syn{position:absolute;top:0;left:50%;width:100vw;transform:translateX(-50%);pointer-events:none;z-index:0}
+.hero,.hero>*{position:relative;z-index:1}
+.syn-hit{position:absolute;inset:0;z-index:0}
+.btn{border-radius:999px!important;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-3px) scale(1.02)}
+.btn-ink{background:linear-gradient(135deg,#ff7a3d,#ff4f8b)!important;color:#fff!important;box-shadow:0 10px 24px -8px rgba(255,79,139,.6)!important;border-color:transparent!important}
+.o-chat span,.o-agent span,.o-ide span{border-radius:999px!important}
+.core{border-radius:28px!important}
+@media(max-width:520px){h1{font-size:clamp(44px,13vw,64px)!important}}
+@media(prefers-reduced-motion:reduce){h1 em{animation:none}}
+.core{background:linear-gradient(145deg,#4a35b8,#1b1346 70%)!important;box-shadow:0 0 0 6px rgba(123,108,246,.25),0 30px 70px -10px rgba(123,108,246,.55)!important}
+.core .label-holder{border-radius:12px!important}
