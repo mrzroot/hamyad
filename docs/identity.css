@@ -22,3 +22,6 @@ main#top{position:relative}
 @media(prefers-reduced-motion:reduce){h1 em{animation:none}}
 .core{background:linear-gradient(145deg,#4a35b8,#1b1346 70%)!important;box-shadow:0 0 0 6px rgba(123,108,246,.25),0 30px 70px -10px rgba(123,108,246,.55)!important}
 .core .label-holder{border-radius:12px!important}
+
+/* QA: keep the "A" (automatic) badge anchored to the theme button */
+html .mrz-tt{position:relative}
