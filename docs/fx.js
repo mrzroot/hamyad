@@ -33,7 +33,7 @@ R.classList.add('fxjs');
 })();
 
 (function(){var main=FX.$('main#top'),hero=FX.$('.hero'),core=FX.$('.core');if(!main||!hero||!core)return;var cv=document.createElement('canvas');cv.className='syn';cv.setAttribute('aria-hidden','true');main.insertBefore(cv,main.firstChild);
-var COL=['#ff7a3d','#ff4f8b','#7b6cf6','#1fc8aa','#ffc233'],P=[],bursts=0,glow=0;
+var COL=['#ff7a3d','#ff4f8b','#7b6cf6','#c8a61f','#ffc233'],P=[],bursts=0,glow=0;
 function H(){return hero.offsetTop+hero.offsetHeight}
 function spawn(x,y,fast){var side=Math.random();return{x0:x,y0:y,t:fast?Math.random()*.2:0,sp:(fast?.7:.16)+Math.random()*.12,c:COL[Math.floor(Math.random()*COL.length)],bend:(Math.random()-.5)*260,r:1.4+Math.random()*2.4}}
 function edge(w,h){var s=Math.random();return s<.5?{x:Math.random()*w,y:-10}:s<.75?{x:-10,y:Math.random()*h}:{x:w+10,y:Math.random()*h}}

@@ -7,7 +7,7 @@
 :root{
   --oak:#2b1d12; --oak-2:#3a2716; --oak-3:#6b4423; --oak-hi:#8a5a30;
   --card:#f6eedc; --card-2:#fffaf0; --rule:#9cc3d5; --margin:#e0645c;
-  --ink:#1f2a44; --ink-2:#3a4766; --stamp:#c8372d; --teal:#1e7f74; --brass:#c9a227; --brass-2:#e8c95a;
+  --ink:#1f2a44; --ink-2:#3a4766; --stamp:#c8372d; --teal:#7f5f1e; --brass:#c9a227; --brass-2:#e8c95a;
   --c-code:#e07a2f; --c-chat:#d4a373; --c-desk:#7b6cf6; --c-gh:#2da44e;
   --disp:Fraunces,"Iowan Old Style","Palatino Linotype",Georgia,serif;
   --body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -15,9 +15,9 @@
   --r:6px;
 }
 :root{--on-brass:#1a1200}
-/*mrz-tokens: light (ivory maple desk) / dark (midnight-indigo desk), Persian turquoise + amber gold*/
-:root,html[data-theme=light]{--oak:#f3ecdd;--oak-2:#d9bf96;--oak-3:#c49a64;--oak-hi:#dcc095;--brass:#b7801f;--brass-2:#e8b04b;--desk-fg:#0b1230;--desk-fg2:#0b1230;--teal:#0a7671;--brass-text:#75500a;--t-b:#1f56b8;--t-backdrop:rgba(11,18,48,.45);--t-brass-lo:#b7801f;--t-desk-dim:#5b6383;--t-desk-hi:#fffaf0;--t-desk0:#eae1cc;--t-fg2:#3a4363;--t-fg2b:#3a4363;--t-fg3:#3a4363;--t-fg4:#4f5878;--t-g:#0b7a4f;--t-gold06:rgba(183,128,31,.06);--t-gold12:rgba(183,128,31,.12);--t-gold16:rgba(183,128,31,.16);--t-gold18:rgba(183,128,31,.18);--t-gold25:rgba(183,128,31,.25);--t-gold3:rgba(183,128,31,.3);--t-gold35:rgba(183,128,31,.35);--t-gold4:rgba(183,128,31,.4);--t-gold45:rgba(183,128,31,.45);--t-gold5:rgba(183,128,31,.5);--t-ink-sh:#c9bfa6;--t-o:#a4470c;--t-red:#b42318;--t-slab:#fffdf8;--t-slab-dim:#5b6383;--t-slab-dim2:#5b6383;--t-slab-fg:#0b1230;--t-slab-fg2:#3a4363;--t-slab-fg3:#3a4363;--t-slab-line:#e0d9c7;--t-slab-line2:#d3cab3;--t-slab2:#f2eee3;--t-stamp-sh:#7d1e17;--t-tint04:rgba(255,253,248,.6);--t-tint06:rgba(255,253,248,.7);--t-tint12:rgba(11,18,48,.07);--t-tint15:rgba(11,18,48,.12);--t-tint25:rgba(11,18,48,.22);--t-tint40:rgba(11,18,48,.35);--t-top:rgba(247,245,239,.88);--t-wood-line:#c49a64;--t-wood-lip:#b88a55;--t-wood-lo:#a77b47;--t-wood0:#e9d9b9;--t-y:#8a5c0c;color-scheme:light}
-html[data-theme=dark]{--oak:#0e1428;--oak-2:#121a33;--oak-3:#24305c;--oak-hi:#34437a;--brass:#e8b04b;--brass-2:#f0be5e;--desk-fg:#f6eedc;--desk-fg2:#fffaf0;--teal:#0a7671;--brass-text:#f0be5e;--t-b:#8cc4ff;--t-backdrop:rgba(4,6,15,.72);--t-brass-lo:#b7801f;--t-desk-dim:#b6a789;--t-desk-hi:#18224a;--t-desk0:#050814;--t-fg2:#e9dcc2;--t-fg2b:#eadfc8;--t-fg3:#e2d5ba;--t-fg4:#cdbf9f;--t-g:#7fd17f;--t-gold06:rgba(232,176,75,.06);--t-gold12:rgba(232,176,75,.12);--t-gold16:rgba(232,176,75,.16);--t-gold18:rgba(232,176,75,.18);--t-gold25:rgba(232,176,75,.25);--t-gold3:rgba(232,176,75,.3);--t-gold35:rgba(232,176,75,.35);--t-gold4:rgba(232,176,75,.4);--t-gold45:rgba(232,176,75,.45);--t-gold5:rgba(232,176,75,.5);--t-ink-sh:#b9a888;--t-o:#ff9e64;--t-red:#ff8a7f;--t-slab:#060a17;--t-slab-dim:#a8a3b9;--t-slab-dim2:#a39fb4;--t-slab-fg:#f0e6d2;--t-slab-fg2:#e8dcc4;--t-slab-fg3:#d8cbb0;--t-slab-line:#1f2847;--t-slab-line2:#2a3560;--t-slab2:#0e1428;--t-stamp-sh:#7d1e17;--t-tint04:rgba(246,238,220,.04);--t-tint06:rgba(246,238,220,.06);--t-tint12:rgba(246,238,220,.12);--t-tint15:rgba(246,238,220,.14);--t-tint25:rgba(246,238,220,.25);--t-tint40:rgba(246,238,220,.4);--t-top:rgba(7,11,26,.86);--t-wood-line:#2a3560;--t-wood-lip:#3a4a85;--t-wood-lo:#1c2645;--t-wood0:#0b1124;--t-y:#f0be5e;color-scheme:dark}
+/*mrz-tokens: light (ivory maple desk) / dark (midnight-indigo desk), Persian terracotta + amber gold*/
+:root,html[data-theme=light]{--oak:#f3ecdd;--oak-2:#d9bf96;--oak-3:#c49a64;--oak-hi:#dcc095;--brass:#b7801f;--brass-2:#e8b04b;--desk-fg:#0b1230;--desk-fg2:#0b1230;--teal:#76520a;--brass-text:#75500a;--t-b:#1f56b8;--t-backdrop:rgba(11,18,48,.45);--t-brass-lo:#b7801f;--t-desk-dim:#5b6383;--t-desk-hi:#fffaf0;--t-desk0:#eae1cc;--t-fg2:#3a4363;--t-fg2b:#3a4363;--t-fg3:#3a4363;--t-fg4:#4f5878;--t-g:#0b7a4f;--t-gold06:rgba(183,128,31,.06);--t-gold12:rgba(183,128,31,.12);--t-gold16:rgba(183,128,31,.16);--t-gold18:rgba(183,128,31,.18);--t-gold25:rgba(183,128,31,.25);--t-gold3:rgba(183,128,31,.3);--t-gold35:rgba(183,128,31,.35);--t-gold4:rgba(183,128,31,.4);--t-gold45:rgba(183,128,31,.45);--t-gold5:rgba(183,128,31,.5);--t-ink-sh:#c9bfa6;--t-o:#a4470c;--t-red:#b42318;--t-slab:#fffdf8;--t-slab-dim:#5b6383;--t-slab-dim2:#5b6383;--t-slab-fg:#0b1230;--t-slab-fg2:#3a4363;--t-slab-fg3:#3a4363;--t-slab-line:#e0d9c7;--t-slab-line2:#d3cab3;--t-slab2:#f2eee3;--t-stamp-sh:#7d1e17;--t-tint04:rgba(255,253,248,.6);--t-tint06:rgba(255,253,248,.7);--t-tint12:rgba(11,18,48,.07);--t-tint15:rgba(11,18,48,.12);--t-tint25:rgba(11,18,48,.22);--t-tint40:rgba(11,18,48,.35);--t-top:rgba(247,245,239,.88);--t-wood-line:#c49a64;--t-wood-lip:#b88a55;--t-wood-lo:#a77b47;--t-wood0:#e9d9b9;--t-y:#8a5c0c;color-scheme:light}
+html[data-theme=dark]{--oak:#0e1428;--oak-2:#121a33;--oak-3:#24305c;--oak-hi:#34437a;--brass:#e8b04b;--brass-2:#f0be5e;--desk-fg:#f6eedc;--desk-fg2:#fffaf0;--teal:#76520a;--brass-text:#f0be5e;--t-b:#8cc4ff;--t-backdrop:rgba(4,6,15,.72);--t-brass-lo:#b7801f;--t-desk-dim:#b6a789;--t-desk-hi:#18224a;--t-desk0:#050814;--t-fg2:#e9dcc2;--t-fg2b:#eadfc8;--t-fg3:#e2d5ba;--t-fg4:#cdbf9f;--t-g:#7fd17f;--t-gold06:rgba(232,176,75,.06);--t-gold12:rgba(232,176,75,.12);--t-gold16:rgba(232,176,75,.16);--t-gold18:rgba(232,176,75,.18);--t-gold25:rgba(232,176,75,.25);--t-gold3:rgba(232,176,75,.3);--t-gold35:rgba(232,176,75,.35);--t-gold4:rgba(232,176,75,.4);--t-gold45:rgba(232,176,75,.45);--t-gold5:rgba(232,176,75,.5);--t-ink-sh:#b9a888;--t-o:#ff9e64;--t-red:#ff8a7f;--t-slab:#060a17;--t-slab-dim:#a8a3b9;--t-slab-dim2:#a39fb4;--t-slab-fg:#f0e6d2;--t-slab-fg2:#e8dcc4;--t-slab-fg3:#d8cbb0;--t-slab-line:#1f2847;--t-slab-line2:#2a3560;--t-slab2:#0e1428;--t-stamp-sh:#7d1e17;--t-tint04:rgba(246,238,220,.04);--t-tint06:rgba(246,238,220,.06);--t-tint12:rgba(246,238,220,.12);--t-tint15:rgba(246,238,220,.14);--t-tint25:rgba(246,238,220,.25);--t-tint40:rgba(246,238,220,.4);--t-top:rgba(7,11,26,.86);--t-wood-line:#2a3560;--t-wood-lip:#3a4a85;--t-wood-lo:#1c2645;--t-wood0:#0b1124;--t-y:#f0be5e;color-scheme:dark}
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -263,8 +263,8 @@ html[dir=rtl] code{direction:ltr}
 .hero-surfaces{direction:ltr}
 
 /* ---- v0.2: tool colours */
-.t-chatgpt{--tc:#0b7a5f}.t-claude-chat,.t-claude-desktop{--tc:#d97757}.t-claude-code{--tc:#a94f30}.t-codex{--tc:#3b82f6}.t-cursor{--tc:#6b7280}
-.t-gemini-cli,.t-gemini-app{--tc:#8b5cf6}.t-grok{--tc:#111}.t-perplexity{--tc:#20808d}.t-copilot{--tc:#6e40c9}.t-windsurf{--tc:#0ea5a4}
+.t-chatgpt{--tc:#7a550b}.t-claude-chat,.t-claude-desktop{--tc:#d97757}.t-claude-code{--tc:#a94f30}.t-codex{--tc:#3b82f6}.t-cursor{--tc:#6b7280}
+.t-gemini-cli,.t-gemini-app{--tc:#8b5cf6}.t-grok{--tc:#111}.t-perplexity{--tc:#8d6920}.t-copilot{--tc:#6e40c9}.t-windsurf{--tc:#a5730e}
 .t-zed{--tc:#2563eb}.t-cline,.t-roo{--tc:#e11d48}.t-jetbrains,.t-junie{--tc:#f97316}.t-aider{--tc:#16a34a}
 .tdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--tc,#999);flex:none}
 
@@ -292,7 +292,7 @@ html[dir=rtl] code{direction:ltr}
 .core-lines{margin:0;width:100%;display:flex;flex-direction:column;gap:3px;font:11.5px var(--mono);color:var(--t-slab-fg);text-align:center;min-height:54px}
 .core-lines span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:fade .4s}
 .core-lines span:first-child{color:var(--brass-text)}
-.dot.d-chat{background:#10a37f}
+.dot.d-chat{background:#a37210}
 
 /* ---- demo tabs */
 .apptabs{display:flex;gap:4px;flex-wrap:wrap;padding:8px 10px 0}
@@ -320,7 +320,7 @@ html[dir=rtl] code{direction:ltr}
 /* ---- connect */
 .conn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:14px}
 .conn{background:var(--card);color:var(--ink);border-radius:8px;padding:14px 16px;box-shadow:0 8px 20px rgba(0,0,0,.3);border-top:5px solid var(--brass)}
-.conn-chat{border-top-color:#10a37f}.conn-agent{border-top-color:#3b82f6}.conn-ide{border-top-color:#6e40c9}.conn-any{border-top-color:var(--stamp)}
+.conn-chat{border-top-color:#a37210}.conn-agent{border-top-color:#3b82f6}.conn-ide{border-top-color:#6e40c9}.conn-any{border-top-color:var(--stamp)}
 .conn header{display:flex;align-items:baseline;gap:8px}
 .conn header b{font:700 18px var(--disp)}
 .conn .kind{margin-inline-start:auto;font:11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#6b5d48}
@@ -428,7 +428,7 @@ html[dir=rtl] .tut-steps li{padding:12px 50px 12px 14px}
 .mk-msg,.mk-tool{opacity:0;animation:mkin .35s forwards;animation-delay:var(--d);max-width:85%;font-size:13.5px;line-height:1.45}
 .mk-msg.u{align-self:flex-end;background:#f0f0f0;border-radius:16px;padding:8px 12px}
 .mk-msg.a{align-self:flex-start}
-.mk-msg.a.claude::before{content:"✳ ";color:#c96442}.mk-msg.a.gpt::before{content:"◎ ";color:#10a37f}.mk-msg.a.cur::before{content:"▸ ";color:#555}
+.mk-msg.a.claude::before{content:"✳ ";color:#c96442}.mk-msg.a.gpt::before{content:"◎ ";color:#a37210}.mk-msg.a.cur::before{content:"▸ ";color:#555}
 .mk-tool{align-self:flex-start;font:12px var(--mono);border:1px solid #e3e3e3;border-radius:8px;padding:5px 9px;color:#555;background:#fafafa}
 .mk-ide{background:#1e1e1e;color:#ddd}.mk-ide .mk-bar{background:#2b2b2b;border-color:#333;color:#aaa}
 .mk-idebody{display:flex;min-height:360px}
