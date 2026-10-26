@@ -131,9 +131,6 @@ export function renderInstructionBlock(config: BrainConfig, entries: Entry[]): s
   return [BLOCK_BEGIN, "## Shared project brain (hamyad)", ...GUIDE, "", brief.trim(), BLOCK_END].join("\n");
 }
 
-/** @deprecated 0.1 name */
-export const renderClaudeBlock = renderInstructionBlock;
-
 /** Insert or replace the generated block inside an existing instruction file. */
 export function upsertBlock(text: string, block: string, heading = "# CLAUDE.md"): string {
   const start = text.indexOf("<!-- hamyad:begin");

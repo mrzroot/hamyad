@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { Brain } from "../src/core/brain.js";
 import { MemoryBackend } from "../src/core/backend.js";
 import { mergeConfig } from "../src/core/config.js";
-import { renderBrief, renderClaudeBlock, upsertBlock, BLOCK_END } from "../src/core/render.js";
+import { renderBrief, renderInstructionBlock, upsertBlock, BLOCK_END } from "../src/core/render.js";
 
 function clock(start = Date.parse("2026-10-09T08:00:00Z")) {
   let t = start;
@@ -86,7 +86,7 @@ test("brief respects maxChars", async () => {
 
 test("upsertBlock inserts once and replaces in place", () => {
   const cfg = mergeConfig({ project: "p" });
-  const block1 = renderClaudeBlock(cfg, []);
+  const block1 = renderInstructionBlock(cfg, []);
   const original = "# My project\n\nRun `make test`.\n";
   const once = upsertBlock(original, block1);
   assert.ok(once.startsWith(original));
