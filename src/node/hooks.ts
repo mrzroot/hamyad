@@ -504,19 +504,3 @@ export async function runHook(toolArg: string, event: string, payload: any, dir?
     return ev ? hookOutput(ev, "") : "{}";
   }
 }
-
-// ------------------------------------------------------------------ 0.1 API (kept for scripts and tests)
-
-export async function hookSessionStart(p: Project, input: any = {}) {
-  const ev = normalizeHook("claude", "SessionStart", input);
-  const r = await phaseStart(p, ev);
-  return { output: JSON.parse(hookOutput(ev, r.context)), report: r.report };
-}
-
-export async function hookSessionEnd(p: Project, input: any = {}) {
-  const ev = normalizeHook("claude", "SessionEnd", input);
-  const r = await phaseEnd(p, ev);
-  return { entry: r.entry, change: r.change, report: r.report };
-}
-
-export { openProject };
