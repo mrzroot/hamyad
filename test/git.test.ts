@@ -30,7 +30,7 @@ test("laptop <-> GitHub <-> chat-side commits: sync, hooks, safe push", () => {
     sh(a, "git", ["push", "-q"]);
 
     // first Claude Code session on the laptop records the baseline
-    const start1 = cli(a, ["hook", "session-start"], JSON.stringify({ session_id: "s1", cwd: a, source: "startup" }));
+    const start1 = cli(a, ["hook", "claude", "SessionStart"], JSON.stringify({ session_id: "s1", cwd: a, source: "startup" }));
     assert.equal(start1.code, 0, start1.err);
     const out1 = JSON.parse(start1.out);
     assert.equal(out1.hookSpecificOutput.hookEventName, "SessionStart");
@@ -46,7 +46,7 @@ test("laptop <-> GitHub <-> chat-side commits: sync, hooks, safe push", () => {
     assert.match(sync.out, /push .*1 brain commit/);
 
     // next laptop session pulls it in and announces it
-    const start2 = JSON.parse(cli(a, ["hook", "session-start"], JSON.stringify({ session_id: "s2", cwd: a, source: "startup" })).out);
+    const start2 = JSON.parse(cli(a, ["hook", "claude", "SessionStart"], JSON.stringify({ session_id: "s2", cwd: a, source: "startup" })).out);
     const ctx = start2.hookSpecificOutput.additionalContext;
     assert.match(ctx, /DECISIONS CHANGED since your last Claude Code session/);
     assert.match(ctx, /Use Zarinpal for payments/);
@@ -65,7 +65,7 @@ test("laptop <-> GitHub <-> chat-side commits: sync, hooks, safe push", () => {
         { type: "assistant", message: { content: [{ type: "tool_use", name: "Write", input: { file_path: path.join(a, "pay.py") } }, { type: "text", text: "Checkout implemented." }] } },
       ].map((x) => JSON.stringify(x)).join("\n"),
     );
-    const end = cli(a, ["hook", "session-end"], JSON.stringify({ session_id: "s2", cwd: a, transcript_path: tr, reason: "prompt_input_exit" }));
+    const end = cli(a, ["hook", "claude", "SessionEnd"], JSON.stringify({ session_id: "s2", cwd: a, transcript_path: tr, reason: "prompt_input_exit" }));
     assert.equal(end.code, 0);
     assert.match(end.err, /logged session s-\d{8}/);
     assert.match(end.err, /1 brain commit\(s\)/);
