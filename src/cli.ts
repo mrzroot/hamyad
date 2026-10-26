@@ -269,10 +269,8 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
       );
     }
     case "hook": {
-      // hamyad hook <tool> <event>   (0.1: hamyad hook session-start|session-end  = claude)
-      let [tool, event] = pos;
-      const legacy: Record<string, string> = { "session-start": "SessionStart", "session-end": "SessionEnd", stop: "Stop" };
-      if (tool && legacy[tool] && !event) [tool, event] = ["claude", legacy[tool]];
+      // hamyad hook <tool> <event>
+      const [tool, event] = pos;
       if (!tool || !event) {
         process.stderr.write("usage: hamyad hook <claude|codex|gemini|cursor|copilot|windsurf|git> <event>\n");
         return 0; // never fail an agent session
