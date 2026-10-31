@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 (2026-10-31)
+
+A clean-up release. hamyad 0.1 was out for less than a day, so the code that kept 0.1 setups working was removed instead of carried forward. Because these are removals, this is a minor (not patch) bump.
+
+**Removed (breaking for 0.1 setups only)**
+- `hamyad hook <event>` (the 0.1 one-argument form, e.g. `hamyad hook session-start`). Use `hamyad hook <tool> <event>`, which every hook written by `hamyad init` 0.2+ already uses. Re-run `hamyad init` if your hooks still use the old form.
+- The `sessionLog` config key. Use `capture.sessions` (`off` / `summary` / `full`).
+- The 0.1 rule that a config without `instructionFiles` only updates `CLAUDE.md`. Such a config now gets the default instruction files, like a new one.
+- The library exports `hookSessionStart`, `hookSessionEnd` and `renderClaudeBlock`. Use `runHook` and `renderInstructionBlock`.
+
+**Site**
+- Theme follows the system (auto/light/dark), warmer palette, accessibility and phone-layout fixes.
+
+No behaviour change for projects set up with 0.2.x.
+
 ## 0.2.1 (2026-10-09)
 
 **One-line install + setup wizard**
