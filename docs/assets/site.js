@@ -637,5 +637,5 @@
   var q = new URL(location.href).searchParams.get("lang");
   var saved = null; try { saved = localStorage.getItem("hamyad-lang"); } catch (e) {}
   var nav = (navigator.language || "").toLowerCase();
-  setLang(q || saved || (nav.indexOf("fa") === 0 ? "fa" : "en"));
+  setLang(q || saved || "fa"); /* Persian first; English is one click away */
 })();
