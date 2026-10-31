@@ -225,7 +225,7 @@ hamyad status   hamyad mcp   hamyad serve   hamyad hook <tool> <event>   hamyad 
 ## Develop
 
 ```bash
-npm ci && npm test            # unit + git round trip + MCP SDK interop + hooks/importers/REST (54 tests)
+npm ci && npm test            # unit + git round trip + MCP SDK interop + hooks/importers/REST (61 tests)
 python3 scripts/e2e/mock.py & python3 scripts/e2e/run.py    # real agent CLIs against the mock model
 npm run bundle:worker
 ```
