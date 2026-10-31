@@ -529,7 +529,7 @@
   var INSTALL_LINES = [
     ["$ curl -fsSL https://mrzroot.github.io/hamyad/install.sh | sh", "y"],
     ["==> Using Node.js v22.20.0", "g"],
-    ["==> Installing hamyad   ✓ hamyad 0.2.1 → ~/.local/bin/hamyad", "g"],
+    ["==> Installing hamyad   ✓ hamyad 0.3.0 → ~/.local/bin/hamyad", "g"],
     ["Set up hamyad for every AI tool in ~/shop? [Y/n] y", ""],
     ["✓ hamyad brain ready: ~/shop/.brain  (claude, codex, gemini, cursor, copilot, windsurf…)", "g"],
     ["Pre-approve hamyad in the AI tools installed here? [Y/n] y", ""],

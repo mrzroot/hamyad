@@ -14,7 +14,7 @@
 #   HAMYAD_DIR=/path      project to set up (default: the current folder)
 #   HAMYAD_NO_SETUP=1     only install the CLI
 #   HAMYAD_SETUP_ARGS=…   extra arguments for `hamyad setup` (e.g. "--tunnel" or "--no-chat")
-#   HAMYAD_VERSION=v0.2.1 install a specific release (default: latest)
+#   HAMYAD_VERSION=v0.3.0 install a specific release (default: latest)
 #   HAMYAD_TARBALL=…      install from this .tgz path/URL instead (testing)
 #   HAMYAD_NODE=portable  always use the portable Node, even if one is installed
 #   HAMYAD_HOME=~/.hamyad install location
