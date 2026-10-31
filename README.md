@@ -99,7 +99,7 @@ irm https://mrzroot.github.io/hamyad/install.ps1 | iex                       # W
 
 `hamyad setup` is the wizard behind it; run it again any time. It pre-approves hamyad in Claude Code, Codex, Gemini CLI and the Cursor CLI, then gives chat apps a public URL: a free Cloudflare quick tunnel (no account), your own Cloudflare Worker (`hamyad setup --worker`, one browser login), or a URL you already have (`--url`). It prints ready-to-paste connector URLs plus direct links for claude.ai, ChatGPT, Grok, Perplexity and Gemini, and can open them. Step-by-step pictures: [the tutorial on the site](https://mrzroot.github.io/hamyad/#tutorial).
 
-Installer options (env): `HAMYAD_YES=1` (no questions), `HAMYAD_DIR=path`, `HAMYAD_NO_SETUP=1`, `HAMYAD_VERSION=0.2.1`, `HAMYAD_NODE=portable`.
+Installer options (env): `HAMYAD_YES=1` (no questions), `HAMYAD_DIR=path`, `HAMYAD_NO_SETUP=1`, `HAMYAD_VERSION=v0.3.0`, `HAMYAD_NODE=portable`.
 
 **Manual:**
 
