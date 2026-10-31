@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/banner.svg" alt="hamyad (هم‌یاد): one shared memory for every AI on your project" width="100%"></p>
+
 <div dir="rtl">
 
 # هم‌یاد (hamyad)
