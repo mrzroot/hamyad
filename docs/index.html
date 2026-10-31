@@ -42,7 +42,9 @@ html[data-theme=light] .mk-ide .mk-side span{color:#4f5878}
 html[data-theme=light] .mk-ide .mk-side span.on{background:#e0d9c7;color:#0b1230}
 html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
 </style>
-<link rel="preload" href="fonts/outfit-700.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="identity.css"></head>
+<link rel="preload" href="fonts/outfit-700.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="identity.css"><link rel="stylesheet" href="mx.css">
+<style id="mx-tokens">:root{--mx-acc:#b8360f;--mx-on-acc:#fff;--mx-max:1180px}html[data-theme=dark]{--mx-acc:#ff8a5c;--mx-acc-t:#ffa27e;--mx-on-acc:#1a0d05}@media (prefers-color-scheme:dark){html:not([data-theme]){--mx-acc:#ff8a5c;--mx-acc-t:#ffa27e;--mx-on-acc:#1a0d05}}.mx-sec>h2{font-family:Outfit,system-ui,sans-serif}</style>
+</head>
 <body>
 <a class="skip" href="#demo" data-t="skip">Skip to the live demo</a>
 
@@ -123,6 +125,9 @@ html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
   </div>
 </section>
 
+
+<!-- mx: one-sentence "what is it" -->
+<section class="mx mx-sec mx-one" aria-label="What it is"><span class="mx-kick"><span lang="en">In one sentence</span><span lang="fa">در یک جمله</span></span><p lang="en">hamyad is <mark>a shared notebook for every AI on your project</mark>: what ChatGPT, Claude, Cursor or any other assistant learns is written to one folder, so the next one picks up where the last one stopped.</p><p lang="fa" dir="rtl">هم‌یاد <mark>یک دفترچهٔ مشترک برای همهٔ هوش‌های مصنوعیِ پروژهٔ شماست</mark>: هرچه ChatGPT، Claude، Cursor یا هر دستیار دیگری یاد می‌گیرد در یک پوشه نوشته می‌شود تا بعدی دقیقاً از همان‌جا ادامه دهد.</p></section>
 <!-- ============================================================ PROBLEM -->
 <section id="problem" class="problem">
   <h2 data-t="problem.h">A dozen AIs, a dozen islands</h2>
@@ -248,7 +253,7 @@ html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
 <!-- ============================================================ HOW -->
 <section id="how" class="how">
   <h2 data-t="how.h">How it works</h2>
-  <ol class="steps">
+  <ol class="mx-steps steps">
     <li>
       <span class="num">1</span>
       <h3 data-t="how.1h">Every AI writes</h3>
@@ -377,6 +382,9 @@ hamyad watch --interval 300    # timer: import local chats, refresh MEMORY.md</c
   <details><summary data-t="faq.q3">What about teams?</summary><p data-t="faq.a3">Everyone with repo (or folder) access shares the brain. The remote endpoint uses one token per deployment; OAuth per person is on the roadmap.</p></details>
   <details><summary data-t="faq.q4">Can I edit entries by hand?</summary><p data-t="faq.a4">Yes, in your editor, on github.com, or right inside MEMORY.md.</p></details>
 </section>
+
+<!-- mx: latest release (real tag; refreshed from the GitHub API when online) -->
+<section class="mx mx-sec" id="release" aria-labelledby="mx-rel-h"><span class="mx-kick"><span class="mx-live" aria-hidden="true"></span><span lang="en">Latest release</span><span lang="fa">آخرین نسخه</span></span><h2 id="mx-rel-h"><span lang="en">Ready to install</span><span lang="fa">آمادهٔ نصب</span></h2><div class="mx-rel" data-repo="hamyad" data-mx><div class="mx-ver" data-mx-ver>v0.3.0</div><div class="mx-meta"><span lang="en">Published <b data-mx-date data-iso="2026-10-31T07:03:00Z" lang="en">2026-10-31</b>. Includes npm package (.tgz).</span><span lang="fa">منتشرشده در <b data-mx-date data-iso="2026-10-31T07:03:00Z" lang="fa">2026-10-31</b>. شامل بستهٔ npm (‏.tgz).</span></div><div class="mx-btns"><a class="mx-btn p" data-mx-link href="https://github.com/mrzroot/hamyad/releases/tag/v0.3.0"><span lang="en">Release notes</span><span lang="fa">یادداشت انتشار</span></a><a class="mx-btn" href="https://github.com/mrzroot/hamyad/blob/main/CHANGELOG.md"><span lang="en">Changelog</span><span lang="fa">تغییرات</span></a><a class="mx-btn" href="https://github.com/mrzroot/hamyad/releases"><span lang="en">All releases</span><span lang="fa">همهٔ نسخه‌ها</span></a></div></div></section>
 </main>
 
 <footer class="foot">
@@ -418,5 +426,6 @@ window.addEventListener('storage',function(e){if(e.key===K||e.key===null)apply(g
 window.addEventListener('pageshow',function(e){if(e.persisted)apply(get(),false)});
 if(window.MutationObserver)new MutationObserver(sync).observe(d,{attributes:true,attributeFilter:['data-lang','lang']});
 /* normalise whatever the boot script set */apply(get(),false)})();</script>
-<script src="fx.js" defer></script></body>
+<script src="fx.js" defer></script><script src="mx.js" defer></script>
+</body>
 </html>

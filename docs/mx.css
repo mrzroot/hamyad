@@ -1,0 +1,73 @@
+/* mx kit: shared landing-page parts (one-sentence intro, animated steps, release card, FAQ, copy buttons).
+   Colours come from the page through --mx-* tokens, so each page keeps its own identity. */
+.mx{--a:var(--mx-acc,#c2410c);--at:var(--mx-acc-t,var(--a));--fg:var(--mx-fg,currentColor);--mut:var(--mx-mut,color-mix(in srgb,currentColor 65%,transparent));--card:var(--mx-card,color-mix(in srgb,currentColor 5%,transparent));--ln:var(--mx-line,color-mix(in srgb,currentColor 18%,transparent));--r:var(--mx-r,16px);--mono:var(--mx-mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);color:var(--fg);position:relative}
+html:not([lang|=fa]) .mx [lang=fa],html[lang|=fa] .mx [lang=en]{display:none!important}
+.mx [lang=fa]{font-family:var(--mx-fa,Vazirmatn,Tahoma,sans-serif);letter-spacing:0}
+.mx-sec{max-width:var(--mx-max,1120px);margin-inline:auto;padding:clamp(44px,7vw,88px) clamp(18px,4vw,32px);box-sizing:border-box}
+.mx-sec>h2{margin:0 0 .35em;font-size:clamp(26px,3.6vw,40px);line-height:1.15}
+.mx-sub{margin:0 0 26px;color:var(--mut);max-width:62ch;line-height:1.7}
+.mx-kick{display:inline-block;font:600 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--at);margin-bottom:12px}
+.mx [lang=fa].mx-kick,.mx-kick [lang=fa]{letter-spacing:0;font-size:13px}
+/* one sentence */
+.mx-one{padding-block:clamp(26px,4vw,44px)}
+.mx-one p{margin:0;font-size:clamp(19px,2.4vw,27px);line-height:1.6;max-width:46ch}
+.mx-one mark{color:inherit;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--a) 38%,transparent) 0) no-repeat 0 0/0% 100%;transition:background-size 1.1s cubic-bezier(.2,.8,.2,1) .25s;padding-inline:.08em}
+html[dir=rtl] .mx-one mark{background-position:100% 0}
+.mx-in mark,html:not(.mx-js) .mx-one mark{background-size:100% 100%}
+/* reveal */
+html.mx-js [data-mx]{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+html.mx-js [data-mx].mx-in{opacity:1;transform:none}
+/* animated steps: works on any existing list/grid of steps */
+.mx-steps{position:relative}
+html.mx-js .mx-steps>*{opacity:0;transform:translateY(22px) scale(.98);transition:opacity .6s ease calc(var(--i,0)*120ms),transform .6s cubic-bezier(.2,.8,.2,1) calc(var(--i,0)*120ms),box-shadow .4s ease,outline-color .4s ease}
+html.mx-js .mx-steps.mx-in>*{opacity:1;transform:none}
+.mx-steps>*{outline:2px solid transparent;outline-offset:4px;border-radius:var(--mx-step-r,inherit)}
+html.mx-js .mx-steps.mx-in>.mx-on{outline-color:color-mix(in srgb,var(--mx-acc,#c2410c) 70%,transparent);transform:translateY(-4px);box-shadow:0 14px 34px -18px color-mix(in srgb,var(--mx-acc,#c2410c) 80%,transparent)}
+.mx-prog{height:3px;border-radius:3px;background:color-mix(in srgb,var(--mx-acc,#c2410c) 18%,transparent);margin:0 0 18px;overflow:hidden}
+.mx-prog i{display:block;height:100%;width:0;background:var(--mx-acc,#c2410c);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+/* own steps (for pages that had none) */
+.mx-flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;counter-reset:s}
+.mx-flow li{counter-increment:s;background:var(--card);border:1px solid var(--ln);border-radius:var(--r);padding:20px 20px 18px;position:relative}
+.mx-flow li::before{content:counter(s,var(--mx-counter,decimal));display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--a);color:var(--mx-on-acc,#fff);font:700 15px/1 var(--mono);margin-bottom:12px}
+.mx-flow h3{margin:0 0 6px;font-size:18px}.mx-flow p{margin:0;color:var(--mut);line-height:1.65;font-size:15px}
+/* release card */
+.mx-rel{display:grid;grid-template-columns:auto 1fr auto;gap:18px 26px;align-items:center;background:var(--card);border:1px solid var(--ln);border-radius:var(--r);padding:22px 24px;overflow:hidden;position:relative}
+.mx-rel::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 40%,color-mix(in srgb,var(--a) 14%,transparent) 50%,transparent 60%);transform:translateX(-100%);animation:mx-shine 5.5s ease-in-out 1.2s infinite;pointer-events:none}
+@keyframes mx-shine{0%,60%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.mx-ver{font:700 clamp(28px,4vw,40px)/1 var(--mono);color:var(--at);direction:ltr;unicode-bidi:isolate}
+.mx-meta a{color:var(--at)}.mx-meta{color:var(--mut);line-height:1.7;font-size:15px}.mx-meta b{color:var(--fg)}
+.mx-btns{display:flex;flex-wrap:wrap;gap:10px}
+.mx-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;border:1.5px solid var(--a);color:var(--fg);text-decoration:none;font-weight:600;font-size:14px;line-height:1.2;transition:background-color .2s,color .2s,transform .2s}
+.mx-btn.p{background:var(--a);color:var(--mx-on-acc,#fff)}
+.mx-btn:hover{transform:translateY(-2px)}.mx-btn:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+.mx-live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--a);margin-inline-end:6px;vertical-align:middle;animation:mx-pulse 2s ease-out infinite}
+@keyframes mx-pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--a) 60%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+@media (max-width:720px){.mx-rel{grid-template-columns:1fr}}
+/* install with copy */
+.mx-cmd{display:flex;align-items:stretch;border:1px solid var(--ln);border-radius:12px;overflow:hidden;background:var(--mx-code-bg,color-mix(in srgb,currentColor 7%,transparent));direction:ltr;margin:0 0 12px}
+.mx-cmd code{flex:1;min-width:0;padding:12px 14px;font:14px/1.5 var(--mono);white-space:pre;overflow-x:auto;color:var(--mx-code-fg,inherit)}
+.mx-copy{all:unset;cursor:pointer;padding:0 16px;font:600 13px/1 var(--mono);background:color-mix(in srgb,var(--a) 16%,transparent);color:var(--fg);display:grid;place-items:center;min-width:64px;transition:background-color .2s}
+.mx-copy:hover{background:color-mix(in srgb,var(--a) 30%,transparent)}.mx-copy:focus-visible{outline:2px solid var(--a);outline-offset:-3px}
+.mx-copy.ok{background:var(--a);color:var(--mx-on-acc,#fff)}
+/* simulation label */
+.mx-sim{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;border:1px dashed var(--mx-acc,#c2410c);font-size:13px;line-height:1.3;color:inherit;background:color-mix(in srgb,var(--mx-acc,#c2410c) 9%,transparent);margin:6px 0 14px}
+.mx-sim::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mx-acc,#c2410c);animation:mx-pulse 2s ease-out infinite;flex:none}
+html:not([lang|=fa]) .mx-sim [lang=fa],html[lang|=fa] .mx-sim [lang=en]{display:none!important}
+/* FAQ */
+.mx-faq{display:grid;gap:10px}
+.mx-faq details{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:0 18px;transition:border-color .25s}
+.mx-faq details[open]{border-color:color-mix(in srgb,var(--a) 55%,transparent)}
+.mx-faq summary{cursor:pointer;list-style:none;padding:16px 0;font-weight:650;display:flex;gap:12px;align-items:center;justify-content:space-between}
+.mx-faq summary::-webkit-details-marker{display:none}
+.mx-faq summary::after{content:"+";font:400 22px/1 var(--mono);color:var(--at);transition:transform .3s;flex:none}
+.mx-faq details[open] summary::after{transform:rotate(45deg)}
+.mx-faq summary:focus-visible{outline:2px solid var(--a);outline-offset:4px;border-radius:6px}
+.mx-faq .mx-ans{padding:0 0 16px;color:var(--mut);line-height:1.75}
+.mx-faq details[open] .mx-ans{animation:mx-drop .35s ease}
+@keyframes mx-drop{from{opacity:0;transform:translateY(-6px)}}
+.mx code{font-family:var(--mono);font-size:.92em;direction:ltr;unicode-bidi:isolate}
+@media (prefers-reduced-motion:reduce){
+  .mx *,.mx *::before,.mx *::after,.mx-sim::before,.mx-steps>*{animation:none!important;transition:none!important}
+  html.mx-js [data-mx],html.mx-js .mx-steps>*{opacity:1!important;transform:none!important}
+  .mx-one mark{background-size:100% 100%}
+}
