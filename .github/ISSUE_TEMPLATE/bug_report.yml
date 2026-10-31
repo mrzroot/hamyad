@@ -1,0 +1,53 @@
+name: 🐛 Bug report
+description: Something crashes or behaves incorrectly.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting! English or Persian are both fine. / گزارش به فارسی هم پذیرفته است.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - CLI / setup wizard
+        - MCP server (stdio)
+        - remote HTTP / Cloudflare Worker
+        - Claude Code / Codex / other agent hooks
+        - importers / REST
+        - installer
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The exact command(s) you ran.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Paste the full output. Remove tokens, private hosts or anything you do not want public.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: hamyad version
+      placeholder: "hamyad --version"
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: OS and network
+      placeholder: "e.g. Ubuntu 24.04, home fibre in Tehran / mobile data / VPS outside Iran"
