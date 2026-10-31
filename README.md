@@ -12,7 +12,7 @@ ChatGPT · Claude (Code, Desktop, claude.ai) · Codex · Gemini (CLI + app) · G
 [![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![runtime deps: 0](https://img.shields.io/badge/runtime%20deps-0-blue)
 
-[Website & live demo](https://mrzroot.github.io/hamyad/) · [فارسی](README.fa.md) · [Research](RESEARCH.md) · [Changelog](CHANGELOG.md)
+[Website & live demo](https://mrzroot.github.io/hamyad/) · [فارسی](README.fa.md) · [Research](RESEARCH.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -230,4 +230,14 @@ python3 scripts/e2e/mock.py & python3 scripts/e2e/run.py    # real agent CLIs ag
 npm run bundle:worker
 ```
 
-Prior art and links: [RESEARCH.md](RESEARCH.md). MIT © [Mohammadreza Zare (M-R-Z)](https://github.com/mrzroot)
+Prior art and links: [RESEARCH.md](RESEARCH.md).
+
+## Contributing
+
+Bug reports, ideas and pull requests are welcome, in English or Persian. Start with
+[CONTRIBUTING.md](CONTRIBUTING.md) (setup, where the code lives, how to test) and the
+[issue forms](https://github.com/mrzroot/hamyad/issues/new/choose). Release history is in [CHANGELOG.md](CHANGELOG.md).
+
+## License
+
+MIT © [Mohammadreza Zare (M-R-Z)](https://github.com/mrzroot)
