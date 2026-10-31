@@ -271,7 +271,7 @@ html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
     </li>
   </ol>
 
-  <figure class="arch" dir="ltr">
+  <figure class="arch" dir="ltr" tabindex="0" aria-label="Architecture diagram">
 <pre>
  ChatGPT · Claude.ai · Grok · Perplexity · Gemini app ──remote MCP / GPT Action / REST──┐
                                                                                          ▼
@@ -281,7 +281,7 @@ html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
 </pre>
   </figure>
 
-  <div class="table-wrap triggers">
+  <div class="table-wrap triggers" tabindex="0" role="region" aria-label="Triggers table">
   <table>
     <thead><tr><th data-t="trg.h1">When</th><th data-t="trg.h2">What hamyad does</th></tr></thead>
     <tbody>
@@ -305,7 +305,7 @@ html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
   </div>
   <div class="tabpanel" id="t-code" role="tabpanel">
     <p data-t="setup.code">Inside your repo. <code>init --all</code> creates <code>.brain/</code> and merges MCP servers, hooks and rules for Claude Code, Codex, Gemini CLI, Cursor, Copilot, Windsurf, Zed, Roo, Junie and aider, without touching anything already there.</p>
-<pre dir="ltr"><code>cd my-project
+<pre dir="ltr" tabindex="0"><code>cd my-project
 curl -fsSL https://mrzroot.github.io/hamyad/install.sh | sh      # Windows: irm https://mrzroot.github.io/hamyad/install.ps1 | iex
 #  = install Node if missing + hamyad + `hamyad setup` (init --all, pre-approve tools)
 # already have Node 20+?  npm i -g https://github.com/mrzroot/hamyad/releases/latest/download/hamyad.tgz && hamyad init --all
@@ -352,7 +352,7 @@ hamyad watch --interval 300    # timer: import local chats, refresh MEMORY.md</c
 <!-- ============================================================ COMPARE -->
 <section id="compare" class="compare">
   <h2 data-t="cmp.h">Next to what already exists</h2>
-  <div class="table-wrap">
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Comparison table">
   <table>
     <thead><tr><th></th><th>Built-in memories</th><th>basic-memory</th><th>mcp-memory-service</th><th>Mem0 MCP</th><th class="us">hamyad</th></tr></thead>
     <tbody>
