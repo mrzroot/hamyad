@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html data-portfolio-design="hamyad" lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="theme-color" content="#0b0818" media="(prefers-color-scheme: dark)">
@@ -16,7 +16,6 @@
 <meta property="og:image" content="https://mrzroot.github.io/hamyad/assets/og.png">
 <meta property="og:url" content="https://mrzroot.github.io/hamyad/">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preload" href="assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"hamyad","applicationCategory":"DeveloperApplication","operatingSystem":"Linux, macOS, Windows, Cloudflare Workers","license":"https://opensource.org/licenses/MIT","url":"https://mrzroot.github.io/hamyad/","codeRepository":"https://github.com/mrzroot/hamyad","softwareVersion":"0.3.0","author":{"@type":"Person","name":"Mohammadreza Zare","url":"https://mrzroot.github.io/"},"offers":{"@type":"Offer","price":"0"}}</script>
 <style id="mrz-theme-css">/*mrz-theme-badge*/[data-theme-toggle]{position:relative}
@@ -42,8 +41,9 @@ html[data-theme=light] .mk-ide .mk-side span{color:#4f5878}
 html[data-theme=light] .mk-ide .mk-side span.on{background:#e0d9c7;color:#0b1230}
 html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
 </style>
-<link rel="preload" href="fonts/outfit-700.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="identity.css"><link rel="stylesheet" href="mx.css">
+<link rel="stylesheet" href="identity.css"><link rel="stylesheet" href="mx.css">
 <style id="mx-tokens">:root{--mx-acc:#b8360f;--mx-on-acc:#fff;--mx-max:1180px}html[data-theme=dark]{--mx-acc:#ff8a5c;--mx-acc-t:#ffa27e;--mx-on-acc:#1a0d05}@media (prefers-color-scheme:dark){html:not([data-theme]){--mx-acc:#ff8a5c;--mx-acc-t:#ffa27e;--mx-on-acc:#1a0d05}}.mx-sec>h2{font-family:Outfit,system-ui,sans-serif}</style>
+<link rel="stylesheet" href="portfolio-reframe.css">
 </head>
 <body>
 <a class="skip" href="#demo" data-t="skip">Skip to the live demo</a>
@@ -73,6 +73,20 @@ html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
 
 <main id="top">
 <!-- ============================================================ HERO -->
+
+<!-- Portfolio design: localized overview; original project sections remain below. -->
+<aside class="rr-signal">
+  <div class="rr-annotation"><p class="rr-product"><bdi>hamyad</bdi><span><span class="rr-en" lang="en">Shared project memory</span><span class="rr-fa" lang="fa">حافظهٔ مشترک پروژه</span></span></p>
+    <p class="rr-promise"><span class="rr-en" lang="en">One decision, visible to the next assistant</span><span class="rr-fa" lang="fa">هر تصمیم برای دستیار بعدی قابل‌مشاهده است</span></p>
+    <a class="rr-start" href="#demo"><span class="rr-en" lang="en">Watch the shared-memory demo</span><span class="rr-fa" lang="fa">دموی حافظهٔ مشترک</span> <span aria-hidden="true">↓</span></a>
+  </div>
+  <div class="rr-visual" aria-hidden="true">
+    <svg viewBox="0 0 360 100" width="360" height="100" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="180" cy="50" r="17" fill="currentColor" fill-opacity=".17"/><circle cx="180" cy="50" r="37" stroke-dasharray="5 5"/><path d="M144 40 94 22m51 46-47 13m118-42 45-17m-45 46 46 13"/><circle cx="84" cy="18" r="9"/><circle cx="88" cy="84" r="9"/><circle cx="273" cy="18" r="9"/><circle cx="273" cy="84" r="9"/><path d="m174 50 5 6 9-12"/>
+    </svg>
+    <div class="rr-steps"><span><span class="rr-en" lang="en">Decide</span><span class="rr-fa" lang="fa">تصمیم</span></span><span><span class="rr-en" lang="en">Share</span><span class="rr-fa" lang="fa">اشتراک</span></span><span><span class="rr-en" lang="en">Recall</span><span class="rr-fa" lang="fa">یادآوری</span></span></div>
+  </div>
+</aside>
 <section class="hero">
   <div class="hero-copy">
     <p class="kicker"><span class="stamp-s">v0.3.0</span> <span data-t="hero.kicker">MIT · MCP + REST · zero runtime dependencies</span></p>
@@ -429,3 +443,4 @@ if(window.MutationObserver)new MutationObserver(sync).observe(d,{attributes:true
 <script src="fx.js" defer></script><script src="mx.js" defer></script>
 </body>
 </html>
+
