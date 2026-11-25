@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Pilot a shared project brain before giving it real history or remote access.">
+<title>hamyad · Project guide / راهنمای پروژه</title>
+<style>
+:root{--ink:#202638;--brand:#124636;--pastel:#b9f1c8;font:1rem/1.6 system-ui,sans-serif;color:var(--ink);background:#f7f9fc}
+*{box-sizing:border-box}body{margin:0}a{color:inherit}a:focus-visible,pre:focus-visible{outline:3px solid #3569e2;outline-offset:4px}
+header{background:var(--brand);color:#fff;padding:2.5rem max(1.25rem,calc((100vw - 65rem)/2));border-bottom:.45rem solid var(--pastel)}
+header h1{font-size:clamp(2rem,8vw,4rem);margin:0;overflow-wrap:anywhere;line-height:1.15}header p{color:var(--pastel);margin:.45rem 0 1rem;font-size:1.1rem}
+nav{display:flex;flex-wrap:wrap;gap:.6rem 1rem}nav a{padding:.2rem .65rem;border:1px solid currentColor;border-radius:999px;text-decoration:none}
+nav a:hover{background:var(--pastel);color:var(--brand)}
+main{width:min(65rem,100% - 2.5rem);margin:2.5rem auto}section+section{margin-top:3rem}.intro span{font-size:.8rem;font-weight:700;color:var(--brand)}
+h2{font-size:clamp(1.4rem,4vw,2rem);line-height:1.3;margin:.25rem 0 1rem}.steps{padding:0;margin:0;display:grid;gap:.85rem;list-style:none;counter-reset:steps}
+.steps li{background:#fff;border:1px solid #d9e0ec;border-inline-start:5px solid var(--brand);border-radius:.75rem;padding:1rem 1.15rem;counter-increment:steps;min-width:0}
+h3{margin:0;line-height:1.3;font-size:1.1rem}h3::before{content:counter(steps);display:inline-grid;place-items:center;margin-inline-end:.5rem;background:var(--pastel);color:var(--brand);border-radius:50%;width:1.8rem;height:1.8rem}
+p{margin:.55rem 0}pre{overflow:auto;white-space:pre;font-size:.87rem;border-radius:.4rem;background:#202638;color:#fff;padding:.75rem;margin:.75rem 0 0}
+footer{padding:1.25rem;text-align:center;color:var(--brand);border-top:1px solid #d9e0ec}
+@media(min-width:52rem){.steps{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body><header><h1>hamyad</h1><p lang="fa" dir="rtl" style="text-align:left">هم‌یاد · راهنمای پروژه</p>
+<nav aria-label="Page links"><a href="#en">English</a><a href="#fa" lang="fa">فارسی</a><a href="https://github.com/mrzroot/hamyad">Source on GitHub</a><a href="https://github.com/mrzroot/hamyad/releases">Releases</a><a href="./index.html">Project home</a></nav>
+</header><main><section id="en" lang="en" dir="ltr" aria-labelledby="title-en">
+<div class="intro"><span>PROJECT WALKTHROUGH</span><h2 id="title-en">Pilot a shared project brain before giving it real history or remote access.</h2></div>
+<ol class="steps"><li><h3>Start in a disposable checkout</h3><p>Begin with capture off so you can inspect configuration and generated files before opting into any session capture.</p><pre dir="ltr" tabindex="0"><code>hamyad init --all --capture off
+hamyad status</code></pre></li>
+<li><h3>Share an intentional note</h3><p>Add one synthetic project decision, then inspect a Markdown export before sharing. Do not test with production transcripts, credentials or personal data.</p><pre dir="ltr" tabindex="0"><code>hamyad add decision 'Use a local test database'
+hamyad export --out preview-memory.md</code></pre></li>
+<li><h3>Treat remote access separately</h3><p>This project's remote endpoint uses a shared token, not per-user OAuth. Do not expose the test store publicly; decide who can read or write before enabling remote access.</p></li></ol>
+</section>
+<section id="fa" lang="fa" dir="rtl" aria-labelledby="title-fa">
+<div class="intro"><span>راهنمای عملی پروژه</span><h2 id="title-fa">پیش از اتصال تاریخچهٔ واقعی یا دسترسی از راه دور، حافظهٔ مشترک را آزمایش کنید.</h2></div>
+<ol class="steps"><li><h3>شروع در محیط آزمایشی</h3><p>ابتدا ثبت نشست‌ها را خاموش نگه دارید تا بتوانید تنظیمات و فایل‌های تولیدشده را بررسی کنید.</p><pre dir="ltr" tabindex="0"><code>hamyad init --all --capture off
+hamyad status</code></pre></li>
+<li><h3>یادداشت ساختگی را امتحان کنید</h3><p>یک تصمیم ساختگی وارد کنید و فایل خروجی را پیش از اشتراک بررسی کنید؛ از دادهٔ واقعی استفاده نکنید.</p><pre dir="ltr" tabindex="0"><code>hamyad add decision 'Use a local test database'
+hamyad export --out preview-memory.md</code></pre></li>
+<li><h3>دسترسی از راه دور را جداگانه بررسی کنید</h3><p>اتصال راه دور از توکن مشترک استفاده می‌کند. قبل از فعال‌سازی، دسترسی خواندن و نوشتن را مشخص کنید.</p></li></ol>
+</section></main>
+<footer>Review guide · not a release / <span lang="fa" dir="rtl">راهنمای بازبینی؛ نه نسخهٔ منتشرشده</span></footer></body></html>

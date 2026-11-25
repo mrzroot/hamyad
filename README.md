@@ -14,6 +14,10 @@ ChatGPT · Claude (Code, Desktop, claude.ai) · Codex · Gemini (CLI + app) · G
 
 [Website & live demo](https://mrzroot.github.io/hamyad/) · [فارسی](README.fa.md) · [Research](RESEARCH.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 
+
+
+[Project walkthrough · راهنمای عملی پروژه](docs/project-guide.html)
+
 </div>
 
 ```
