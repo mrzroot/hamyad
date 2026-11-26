@@ -61,6 +61,7 @@ git add -A && git commit -m "Add hamyad brain" && git push
 hamyad import              # گفت‌وگوهای قبلی ابزارها را از لاگ‌های محلی وارد می‌کند
 hamyad connect chatgpt     # دستور دقیق برای هر ابزار
 hamyad status              # کدام ابزار وصل است و آخرین جلسه‌ی هر کدام
+hamyad doctor --json       # ممیزی سلامت .brain/، ارجاع‌های شکسته و وضعیت همگام‌سازی
 ```
 
 **بدون گیت‌هاب:**

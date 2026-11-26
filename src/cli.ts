@@ -19,6 +19,7 @@ import { brainRel, readStdin, runHook } from "./node/hooks.js";
 import { importAll, IMPORT_TOOLS } from "./node/importers.js";
 import { projectTimeline } from "./node/timeline.js";
 import { absorbAutoMemory } from "./node/absorb.js";
+import { auditBrainHealth } from "./core/health.js";
 import { VERSION } from "./version.js";
 
 type Flags = Record<string, string | boolean>;
@@ -46,7 +47,7 @@ export function parseArgs(argv: string[]): { pos: string[]; flags: Flags } {
       continue;
     }
     if (val === undefined && i + 1 < argv.length && !argv[i + 1].startsWith("-")) {
-      const boolish = ["help", "version", "json", "dry-run", "git", "all", "global", "quiet", "import", "once", "yes", "open", "approve", "tunnel", "worker", "init", "verify"];
+      const boolish = ["help", "version", "json", "strict", "dry-run", "git", "all", "global", "quiet", "import", "once", "yes", "open", "approve", "tunnel", "worker", "init", "verify"];
       if (!boolish.includes(key)) val = argv[++i];
     }
     flags[key] = val === undefined ? true : val;
@@ -76,7 +77,8 @@ ${bold("Setup")}
                                         (default: tools detected in the repo; --store = no-GitHub mode)
   hamyad connect [tool] [--url URL]     exact setup for any AI: chatgpt, claude-ai, gemini-app, grok, perplexity,
                                         codex, cursor, windsurf, copilot, zed, cline, jetbrains, aider, any…
-  hamyad status                         brain, per-tool integration, last session per tool
+  hamyad status | doctor [--json] [--strict]
+                                        brain health, broken refs, per-tool integration, last session
 
 ${bold("Memory")}
   hamyad add <decision|task|note|context> "title" [-m body] [-t a,b] [-s status] [--supersedes id1,id2]
@@ -455,15 +457,65 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
     case "doctor": {
       const s = await p.brain.snapshot();
       const count = (k: string) => s.entries.filter((e) => e.kind === k).length;
-      const ok = (b: boolean, t: string) => out(`  ${b ? green("✓") : yellow("·")} ${t}`);
+      const storeExists = existsSync(p.brainDir);
+      const dirty = p.isGit && p.brainInGit
+        ? git(p.root, ["status", "--porcelain", "-uall", "--", ...brainRel(p)], { allowFail: true }).out
+        : "";
+      const uncommittedFiles = dirty ? dirty.split("\n").filter(Boolean).length : 0;
+      const errs = path.join(p.stateDir, "hook-errors.log");
+      const hookErrorsLog = existsSync(errs);
+      const health = auditBrainHealth(s.entries, { storeExists, uncommittedFiles, hookErrorsLog });
+
       const has = (rel: string, needle: string) => {
         const f = path.join(p.root, rel);
         return existsSync(f) && readFileSync(f, "utf8").includes(needle);
       };
+      const agents = has("AGENTS.md", "hamyad:begin");
+      const tools = [
+        { id: "claude-code", label: "Claude Code", mcp: has(".mcp.json", '"hamyad"'), hooks: has(".claude/settings.json", "hamyad hook"), context: has("CLAUDE.md", "hamyad:begin") },
+        { id: "codex", label: "Codex", mcp: has(".codex/config.toml", "mcp_servers.hamyad"), hooks: has(".codex/hooks.json", "hamyad hook"), context: agents },
+        { id: "gemini-cli", label: "Gemini CLI", mcp: has(".gemini/settings.json", '"hamyad"'), hooks: has(".gemini/settings.json", "hamyad hook"), context: agents && has(".gemini/settings.json", "AGENTS.md") },
+        { id: "cursor", label: "Cursor", mcp: has(".cursor/mcp.json", '"hamyad"'), hooks: has(".cursor/hooks.json", "hamyad hook"), context: has(".cursor/rules/hamyad.mdc", "hamyad") || agents },
+        { id: "copilot", label: "Copilot", mcp: has(".vscode/mcp.json", "hamyad") || has(".mcp.json", '"hamyad"'), hooks: has(".github/hooks/hamyad.json", "hamyad hook"), context: agents },
+        { id: "windsurf", label: "Windsurf", mcp: null, hooks: has(".devin/hooks.json", "hamyad hook") || has(".windsurf/hooks.json", "hamyad hook"), context: has(".windsurf/rules/hamyad.md", "hamyad") || agents },
+        { id: "aider", label: "aider", mcp: null, hooks: null, context: has(".aider.conf.yml", "AGENTS.md") },
+        { id: "zed", label: "Zed", mcp: has(".zed/settings.json", '"hamyad"'), hooks: null, context: agents },
+        { id: "roo", label: "Roo / Cline", mcp: has(".roo/mcp.json", '"hamyad"'), hooks: null, context: agents },
+        { id: "junie", label: "JetBrains", mcp: has(".junie/mcp/mcp.json", '"hamyad"'), hooks: null, context: agents },
+      ];
+
+      if (flags.json) {
+        out(JSON.stringify({
+          version: VERSION,
+          project: s.config.project,
+          root: p.root,
+          brainDir: p.brainDir,
+          counts: {
+            decision: count("decision"),
+            superseded: s.entries.filter((e) => e.kind === "decision" && e.status === "superseded").length,
+            task: count("task"),
+            openTasks: s.entries.filter((e) => e.kind === "task" && e.status !== "done" && e.status !== "dropped").length,
+            note: count("note"),
+            context: count("context"),
+            session: count("session"),
+            change: count("change"),
+          },
+          health,
+          tools,
+        }, null, 2));
+        return flags.strict && !health.healthy ? 1 : 0;
+      }
+
+      const ok = (b: boolean, t: string) => out(`  ${b ? green("✓") : yellow("·")} ${t}`);
       out(`${bold("hamyad")} ${VERSION} · ${bold(s.config.project)} · ${p.root}`);
-      ok(existsSync(p.brainDir), `store: ${p.store.kind === "file" ? "single file" : "folder"} ${p.brainDir}${p.store.external ? " (outside the repo: no-GitHub mode)" : ""}${existsSync(p.brainDir) ? "" : " missing (run hamyad init)"}`);
+      ok(storeExists, `store: ${p.store.kind === "file" ? "single file" : "folder"} ${p.brainDir}${p.store.external ? " (outside the repo: no-GitHub mode)" : ""}${storeExists ? "" : " missing (run hamyad init)"}`);
       out(`    ${count("decision")} decisions (${s.entries.filter((e) => e.kind === "decision" && e.status === "superseded").length} superseded) · ${count("task")} tasks (${s.entries.filter((e) => e.kind === "task" && e.status !== "done" && e.status !== "dropped").length} open) · ${count("note")} notes · ${count("context")} context · ${count("session")} sessions · ${count("change")} change sets`);
       out(`    capture: sessions=${s.config.capture.sessions} redact=${s.config.capture.redact} · exports: ${s.config.exports.join(", ") || "none"} · instruction files: ${s.config.instructionFiles.join(", ")}`);
+      for (const iss of health.issues) {
+        if (iss.code !== "missing_store" && iss.code !== "uncommitted_brain" && iss.code !== "hook_errors") {
+          ok(false, iss.message);
+        }
+      }
       out(bold("\n  Tools") + dim("            MCP  hooks  context  last session"));
       const last = (src: string) => s.entries.find((e) => e.kind === "session" && e.source === src);
       const row = (label: string, src: string, mcp: boolean | null, hooks: boolean | null, ctx: boolean | null) => {
@@ -471,17 +523,7 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
         const l = last(src);
         out(`    ${label.padEnd(14)} ${m(mcp)}  ${m(hooks)}   ${m(ctx)}    ${l ? `${(l.updated || l.created).slice(0, 16).replace("T", " ")} ${dim(l.title.slice(0, 50))}` : dim("never")}`);
       };
-      const agents = has("AGENTS.md", "hamyad:begin");
-      row("Claude Code", "claude-code", has(".mcp.json", '"hamyad"'), has(".claude/settings.json", "hamyad hook"), has("CLAUDE.md", "hamyad:begin"));
-      row("Codex", "codex", has(".codex/config.toml", "mcp_servers.hamyad"), has(".codex/hooks.json", "hamyad hook"), agents);
-      row("Gemini CLI", "gemini-cli", has(".gemini/settings.json", '"hamyad"'), has(".gemini/settings.json", "hamyad hook"), agents && has(".gemini/settings.json", "AGENTS.md"));
-      row("Cursor", "cursor", has(".cursor/mcp.json", '"hamyad"'), has(".cursor/hooks.json", "hamyad hook"), has(".cursor/rules/hamyad.mdc", "hamyad") || agents);
-      row("Copilot", "copilot", has(".vscode/mcp.json", "hamyad") || has(".mcp.json", '"hamyad"'), has(".github/hooks/hamyad.json", "hamyad hook"), agents);
-      row("Windsurf", "windsurf", null, has(".devin/hooks.json", "hamyad hook") || has(".windsurf/hooks.json", "hamyad hook"), has(".windsurf/rules/hamyad.md", "hamyad") || agents);
-      row("aider", "aider", null, null, has(".aider.conf.yml", "AGENTS.md"));
-      row("Zed", "zed", has(".zed/settings.json", '"hamyad"'), null, agents);
-      row("Roo / Cline", "roo", has(".roo/mcp.json", '"hamyad"'), null, agents);
-      row("JetBrains", "junie", has(".junie/mcp/mcp.json", '"hamyad"'), null, agents);
+      for (const t of tools) row(t.label, t.id, t.mcp, t.hooks, t.context);
       const chat = (src: string, label: string) => {
         const l = last(src) || s.entries.find((e) => e.source === src);
         out(`    ${label.padEnd(14)} ${dim("connector")}         ${l ? `${(l.updated || l.created).slice(0, 16).replace("T", " ")} ${dim(l.title.slice(0, 50))}` : dim("never")}`);
@@ -498,15 +540,13 @@ export async function main(argv = process.argv.slice(2)): Promise<number> {
         const remote = git(p.root, ["remote", "get-url", "origin"], { allowFail: true });
         ok(remote.ok, `git remote: ${remote.ok ? remote.out : "none (sync is local only)"}`);
         if (p.brainInGit) {
-          const dirty = git(p.root, ["status", "--porcelain", "-uall", "--", ...brainRel(p)], { allowFail: true }).out;
-          ok(!dirty, dirty ? `uncommitted brain changes (${dirty.split("\n").length} files); run hamyad sync` : "brain committed");
+          ok(!dirty, uncommittedFiles ? `uncommitted brain changes (${uncommittedFiles} files); run hamyad sync` : "brain committed");
         }
         const ahead = git(p.root, ["rev-list", "--count", "@{u}..HEAD"], { allowFail: true });
         if (ahead.ok) ok(ahead.out === "0", ahead.out === "0" ? "in sync with upstream" : `${ahead.out} unpushed commit(s)`);
       } else ok(!p.store.external ? false : true, p.store.external ? "no git: the shared folder/file is the sync medium" : "not a git repository (sync is local only)");
-      const errs = path.join(p.stateDir, "hook-errors.log");
-      if (existsSync(errs)) ok(false, `hook errors logged in ${errs}`);
-      return 0;
+      if (hookErrorsLog) ok(false, `hook errors logged in ${errs}`);
+      return flags.strict && !health.healthy ? 1 : 0;
     }
     case "absorb": {
       const r = await absorbAutoMemory(p, typeof flags.from === "string" ? flags.from : undefined);

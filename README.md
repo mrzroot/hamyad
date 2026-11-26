@@ -101,7 +101,7 @@ irm https://mrzroot.github.io/hamyad/install.ps1 | iex                       # W
 
 `hamyad setup` is the wizard behind it; run it again any time. It pre-approves hamyad in Claude Code, Codex, Gemini CLI and the Cursor CLI, then gives chat apps a public URL: a free Cloudflare quick tunnel (no account), your own Cloudflare Worker (`hamyad setup --worker`, one browser login), or a URL you already have (`--url`). It prints ready-to-paste connector URLs plus direct links for claude.ai, ChatGPT, Grok, Perplexity and Gemini, and can open them. Step-by-step pictures: [the tutorial on the site](https://mrzroot.github.io/hamyad/#tutorial).
 
-Installer options (env): `HAMYAD_YES=1` (no questions), `HAMYAD_DIR=path`, `HAMYAD_NO_SETUP=1`, `HAMYAD_VERSION=v0.3.0`, `HAMYAD_NODE=portable`.
+Installer options (env): `HAMYAD_YES=1` (no questions), `HAMYAD_DIR=path`, `HAMYAD_NO_SETUP=1`, `HAMYAD_VERSION=v0.4.0`, `HAMYAD_NODE=portable`.
 
 **Manual:**
 
@@ -115,6 +115,7 @@ git add -A && git commit -m "Add hamyad brain" && git push
 hamyad import                # pull in past chats from tools you already used here (Claude Code, Codex, Gemini, Copilot, Cursor, Windsurf, aider)
 hamyad connect chatgpt       # or claude-ai, grok, perplexity, gemini-app, cline, jetbrains, any …
 hamyad status                # which tools are wired, last session of each
+hamyad doctor --json --strict # audit .brain/ integrity, broken refs & sync drift
 ```
 
 **No GitHub?** Put the brain in any synced folder, or in a single file:

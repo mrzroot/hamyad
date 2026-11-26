@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0 (2026-11-26)
+
+- Upgraded `hamyad doctor` / `hamyad status` with `--json` and `--strict` flags.
+- Added `.brain/` health audit (`auditBrainHealth`): detects broken `supersedes` / `supersededBy` references, oversized notes (>16 KB), missing store, uncommitted brain changes, and hook errors.
+
 ## 0.3.0 (2026-10-31)
 
 A clean-up release. hamyad 0.1 was out for less than a day, so the code that kept 0.1 setups working was removed instead of carried forward. Because these are removals, this is a minor (not patch) bump.

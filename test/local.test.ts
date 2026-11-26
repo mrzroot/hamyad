@@ -7,6 +7,7 @@ import { init, mergeHooks } from "../src/node/init.js";
 import { sessionBody } from "../src/node/hooks.js";
 import { parseClaude } from "../src/node/transcripts.js";
 import { parseArgs } from "../src/cli.js";
+import { auditBrainHealth } from "../src/core/health.js";
 import { autoMemoryDir } from "../src/node/absorb.js";
 
 test("init is idempotent and preserves existing config files", async () => {
@@ -125,6 +126,48 @@ test("hook commands never fail the session", () => {
     const r = cli(dir, ["hook", "session-end"], "{not json");
     assert.equal(r.code, 0);
     assert.equal(cli(dir, ["hook", "wat"], "{}").code, 0);
+  } finally {
+    rm(dir);
+  }
+});
+
+test("doctor --json reports brain health and catches broken supersedes / oversized notes", () => {
+  const dir = tmp();
+  try {
+    assert.equal(cli(dir, ["init", "--project", "health-demo", "--no-hooks"]).code, 0);
+    const d1 = cli(dir, ["doctor", "--json"]);
+    assert.equal(d1.code, 0, d1.err);
+    const parsed1 = JSON.parse(d1.out);
+    assert.equal(parsed1.health.healthy, true);
+
+    writeFileSync(
+      path.join(dir, ".brain", "decisions", "d-20261126-broken.md"),
+      "---\nid: d-20261126-broken\nkind: decision\ntitle: Broken ref\nstatus: active\ntags: []\nsource: cli\ncreated: 2026-11-26T00:00:00Z\nupdated: 2026-11-26T00:00:00Z\nsupersedes: [d-00000000-nope]\n---\nBody\n",
+    );
+    const d2 = cli(dir, ["doctor", "--json", "--strict"]);
+    assert.equal(d2.code, 1);
+    const parsed2 = JSON.parse(d2.out);
+    assert.equal(parsed2.health.healthy, false);
+    assert.ok(parsed2.health.issues.some((i: { code: string }) => i.code === "broken_supersedes"));
+
+    const oversized = auditBrainHealth(
+      [
+        {
+          id: "n-20261126-huge",
+          kind: "note",
+          title: "Huge",
+          body: "x".repeat(17 * 1024),
+          tags: [],
+          source: "cli",
+          created: "2026-11-26T00:00:00Z",
+          updated: "2026-11-26T00:00:00Z",
+          path: "notes/huge.md",
+        },
+      ],
+      { storeExists: true },
+    );
+    assert.equal(oversized.healthy, false);
+    assert.equal(oversized.issues[0].code, "oversized_entry");
   } finally {
     rm(dir);
   }
