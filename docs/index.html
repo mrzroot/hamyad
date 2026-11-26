@@ -44,7 +44,7 @@ html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
 <link rel="stylesheet" href="identity.css"><link rel="stylesheet" href="mx.css">
 <style id="mx-tokens">:root{--mx-acc:#b8360f;--mx-on-acc:#fff;--mx-max:1180px}html[data-theme=dark]{--mx-acc:#ff8a5c;--mx-acc-t:#ffa27e;--mx-on-acc:#1a0d05}@media (prefers-color-scheme:dark){html:not([data-theme]){--mx-acc:#ff8a5c;--mx-acc-t:#ffa27e;--mx-on-acc:#1a0d05}}.mx-sec>h2{font-family:Outfit,system-ui,sans-serif}</style>
 <link rel="stylesheet" href="portfolio-reframe.css">
-<link rel="stylesheet" href="/assets/studio-mark.css"></head>
+<link rel="stylesheet" href="/assets/studio-mark.css"><link rel="stylesheet" href="/assets/portfolio/embed.css"><script defer src="/assets/portfolio/exhibit.js"></script></head>
 <body>
 <a class="skip" href="#demo" data-t="skip">Skip to the live demo</a>
 
@@ -138,11 +138,32 @@ html[data-theme=light] .mk-ide .mk-row{border-color:#e0d9c7}
     </div>
   </div>
 </section>
-<aside class="studio-project-entry" style="--entry-color:#c2aeef">
-  <img src="/assets/thumbs/hamyad.webp" alt="" width="160" height="100" loading="lazy" decoding="async">
-  <div><strong>Leave a usable project handoff</strong><small>Save a structured handoff</small></div>
-  <a href="/playground/?project=hamyad&amp;lang=en">Try the case ↗</a>
-</aside>
+<div class="atlas-embedded" data-motif="layers" style="--exhibit-hue:272"><section class="exhibit-studio" id="portfolio-example" data-project="hamyad" data-motif="layers" data-state="0" aria-labelledby="portfolio-example-title">
+    <div class="exhibit-studio-head"><div><p class="exhibit-kicker"><span class="pf-en" lang="en">Illustrative sample</span><span class="pf-fa" lang="fa">دادهٔ نمونه</span></p><h2 id="portfolio-example-title"><span class="pf-en" lang="en">Open a layer</span><span class="pf-fa" lang="fa">یک لایه را باز کن</span></h2></div>
+       <a href="/projects/guide/hamyad/"><span class="pf-en" lang="en">Interactive introduction</span><span class="pf-fa" lang="fa">معرفی تعاملی</span> <i class="exhibit-arrow" aria-hidden="true"></i></a></div>
+    <div class="exhibit-lab">
+      <div class="stage-picture" aria-hidden="true">
+        <div class="stage-sign"><i></i><i></i><i></i><strong dir="ltr">hamyad</strong></div>
+
+        <div class="stage-track" dir="ltr"></div>
+        <div class="stage-evidence" dir="ltr"><span dir="auto">objective</span><span dir="auto">test command</span><span dir="auto">open issue</span></div>
+      </div>
+      <div class="stage-work">
+        <p><span class="pf-en" lang="en">A new assistant needs the current objective, the test command, and the last unresolved issue.</span><span class="pf-fa" lang="fa">دستیار تازه به هدف فعلی، دستور آزمون و آخرین مسئلهٔ حل‌نشده نیاز دارد.</span></p>
+        <div class="stage-actions" role="group" aria-label="Example controls / کنترل‌های نمونه">
+          <button type="button" data-stage="1" aria-pressed="false"><span class="pf-en" lang="en">Save a structured handoff</span><span class="pf-fa" lang="fa">تحویل ساختاریافته ثبت کن</span><i class="exhibit-arrow" aria-hidden="true"></i></button><button type="button" data-stage="2" aria-pressed="false"><span class="pf-en" lang="en">Start over from the chat archive</span><span class="pf-fa" lang="fa">از بایگانی گفت‌وگو دوباره شروع کن</span><i class="exhibit-arrow" aria-hidden="true"></i></button>
+        </div>
+        <output class="stage-result" aria-live="polite"><span class="pf-en" lang="en">Try a response to see its effect.</span><span class="pf-fa" lang="fa">یک کار را انتخاب کن و اثرش را ببین.</span></output>
+        <div class="stage-foot">
+          <button type="button" data-stage="0" aria-pressed="true"><span class="pf-en" lang="en">Reset example</span><span class="pf-fa" lang="fa">بازنشانی نمونه</span></button>
+
+        </div>
+      </div>
+    </div>
+   </section>
+    <p class="exhibit-takeaway"><span class="pf-en" lang="en">A usable handoff names the current goal, test command and unresolved issue. Verify all three in a new session.</span><span class="pf-fa" lang="fa">یک تحویل قابل استفاده هدف فعلی، دستور آزمون و مسئلهٔ باز را مشخص می‌کند. هر سه را در نشست تازه بررسی کن.</span></p>
+    <script type="application/json" data-embed-project>{"entries":[{"id":"hamyad","group":"agents","motif":"layers","color":"#c2aeef","title":["Leave a usable project handoff","تحویل پروژه را قابل استفاده کن"],"brief":["A new assistant needs the current objective, the test command, and the last unresolved issue.","دستیار تازه به هدف فعلی، دستور آزمون و آخرین مسئلهٔ حل‌نشده نیاز دارد."],"actions":[["Save a structured handoff","تحویل ساختاریافته ثبت کن"],["Start over from the chat archive","از بایگانی گفت‌وگو دوباره شروع کن"]],"outcomes":[["The next session can pick up the objective and the open work without repeating discovery.","نشست بعدی هدف و کارِ باز را می‌فهمد و بررسی قبلی را تکرار نمی‌کند."],["The archive includes old assumptions and requires an extra pass to find the active state.","بایگانی فرض‌های قدیمی را هم دارد و پیدا کردن وضعیت فعلی زمان می‌برد."]],"evidence":[["objective","test command","open issue"],["state · shared","next action · known"],["archive · long","current state · unclear"]],"name":"hamyad","kicker":["Shared memory for every AI","حافظهٔ مشترک برای همهٔ هوش‌های مصنوعی"],"intro":["Carry project notes, decisions and session context between coding sessions through a Git-backed workspace and MCP.","یادداشت‌ها، تصمیم‌ها و زمینهٔ کار را بین جلسه‌های کدنویسی از طریق فضای کاری Git و MCP منتقل کنید."],"hint":["Use a throwaway workspace with non-sensitive notes and verify that a second session can retrieve one decision.","در فضای کاری آزمایشی یک یادداشت غیرمحرمانه ثبت کنید و ببینید نشست دوم همان تصمیم را پیدا می‌کند یا نه."],"site":"/hamyad/","source":"https://github.com/mrzroot/hamyad","layout":"shelf","hue":272,"image":"/assets/thumbs/hamyad.webp"}],"labels":{"map":["Project Atlas","اطلس پروژه‌ها"],"mapIntro":["Four ways to explore the projects. Choose a project to see what it does and open its interactive introduction.","چهار مسیر برای گشتن میان پروژه‌ها. یکی را انتخاب کن تا ببینی چه کار می‌کند و معرفی تعاملی‌اش را باز کنی."],"agents":["AI tooling","ابزارهای هوش مصنوعی"],"language":["Language and data","زبان و داده"],"systems":["Systems","سامانه‌ها"],"showcase":["Design and demos","طراحی و دمو"],"projects":["All projects","همهٔ پروژه‌ها"],"open":["Interactive introduction","معرفی تعاملی"],"test":["Try the example","نمونه را امتحان کن"],"story":["The situation","مسئله"],"reference":["Inspect the project","بررسی پروژه"],"source":["View source on GitHub","کد منبع در گیت‌هاب"],"demo":["Open project website","باز کردن سایت پروژه"],"guide":["Suggested first step","قدم اول پیشنهادی"],"sample":["Illustrative sample","دادهٔ نمونه"],"result":["What happens","نتیجه"],"choose":["Try a response to see its effect.","یک کار را انتخاب کن و اثرش را ببین."],"still":["Initial state","حالت اولیه"],"reset":["Reset example","بازنشانی نمونه"],"more":["Explore another project","یک پروژهٔ دیگر ببین"]}}</script>
+  </div>
 
 
 <!-- mx: one-sentence "what is it" -->
